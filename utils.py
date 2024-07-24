@@ -165,7 +165,7 @@ def plot_statistics(data, column, color_map:dict = {"Dave":'#636EFA', "Pete":'#E
     
     fig = px.line(data_frame=data.dropna(subset=column),\
                   x="date", y=column, color="name", color_discrete_map=color_map, markers=True, hover_name="name",\
-                 title=f"{label_dict[column]}", labels={"date":"Date", column:label_dict[column]},
+                 title=f"{label_dict[column]} Over Time", labels={"date":"Date", column:label_dict[column]},
                  hover_data={"name":False})
     
     fig.update_layout(legend={"title":"Player Name"})

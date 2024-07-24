@@ -4,9 +4,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 import plotly.figure_factory as ff
 import streamlit as st
-
-
-from utils import add_round, get_handicap, fill_handicaps, plot_statistics, histplot, pie_chart, dist_plot, rolling_avg, scatter, mean_med_stats
+from utils import add_round, get_handicaps, fill_handicaps, plot_statistics, histplot, pie_chart, dist_plot, rolling_avg, scatter, mean_med_stats
 
 def main():
 
@@ -43,7 +41,7 @@ $$
 
     st.markdown("""As you continue to record the handicap differentials for each round played, you will also need to meet a minimum threshold for rounds played. An official handicap can be obtained after recording 54 holes of golf. Your handicap will be calculated by averaging a certain number of your lowest scores depending on how many rounds you have recorded.""")
 
-    st.dataframe(pd.read_csv("handicap_rds.csv").rename(columns={"Differentials to Use":"Differential Scores to Use",
+    st.dataframe(pd.read_csv("handicap_rds.csv", dtype={"Adjustment":str}).rename(columns={"Differentials to Use":"Differential Scores to Use",
                                                                 "Adjustment":"Handicap Adjustment"}), use_container_width=True, hide_index=True)
 
     st.markdown("""Finally, you can find your handicap by applying this calculation:""")
@@ -57,7 +55,9 @@ $$
     st.markdown("---")
 
     st.subheader(":blue[While my friends and I collect some data...]")
-    st.markdown("""I have generated some synthetic data to demonstrate the visualizations we will use to track and analyze our scores:""")
+    st.markdown("""I have generated some synthetic data to demonstrate the visualizations we will use to track and analyze our scores. This data is purely for purposes of demonstration, and some of the statistics and relationships shown will likely not reflect reality for most golfers. \n \nThat being said, I am still the best golfer based on synthetic data......""")
+    
+    st.markdown("---")
     
     # Data load
     df = pd.read_csv("synthetic_data.csv", parse_dates=["date"]).sort_values(by="date")
@@ -70,9 +70,7 @@ $$
         "fairways_hit": "Fairways Hit per Round",
         "gir": "Greens in Regulation",
         "penalty/ob": "Penalties / OB per Round",
-        "fiveRd_handicap": "Five-Round Rolling Handicap",
-        "tenRd_handicap": "Ten-Round Rolling Handicap",
-        "twentyRd_handicap": "Twenty-Round Rolling Handicap"
+        "handicap":"Handicap Index"
     }
 
     reverse_labels = {val:key for key, val in label_dict.items()}
@@ -86,7 +84,7 @@ $$
     for idx, name in enumerate(names):
         with cols[idx]:
             # Find the most recent value of "twentyRd_handicap" for the current name
-            recent_handicap = df.loc[df['name'] == name, 'twentyRd_handicap'].iloc[-1]
+            recent_handicap = df.loc[df['name'] == name, 'handicap'].iloc[-1]
             # st.metric(label=f"{name}", value=recent_handicap.round(3))
             st.markdown(f"""
         <div style="text-align: center;">
@@ -98,7 +96,7 @@ $$
 
     st.markdown("---")
     st.subheader(":violet[Trends Over Time:]")
-    trend_var = st.selectbox("Trend Metric:", [*reverse_labels.keys()], index=0)
+    trend_var = st.selectbox("Trend Metric:", [*reverse_labels.keys()], index=7)
     trend_data = df.dropna(subset=reverse_labels[trend_var])
 
     # Set up min and max dates
@@ -112,7 +110,16 @@ $$
     # start_date = pd.to_datetime(st.date_input("Start Date", min_value=min_date, max_value=max_date, value=min_date))
     # end_date = pd.to_datetime(st.date_input("End Date", min_value=min_date, max_value=max_date, value=max_date))
     
-    st.plotly_chart(plot_statistics(trend_data.loc[(trend_data["date"] >= pd.to_datetime(start_date)) & (trend_data["date"] <= pd.to_datetime(end_date))], "twentyRd_handicap"))
+    st.plotly_chart(plot_statistics(trend_data.loc[(trend_data["date"] >= pd.to_datetime(start_date)) & (trend_data["date"] <= pd.to_datetime(end_date))], reverse_labels[trend_var]))
+
+    st.subheader(":violet[Rolling average statistics:]")
+    roll_var = st.selectbox("Rolling Average Metric:", [*reverse_labels.keys()], index=0)
+    window = st.slider("Number of Rounds to Include in the Rolling Window:", min_value=5, max_value = 30) 
+    st.plotly_chart(rolling_avg(df, reverse_labels[roll_var], window))
+
+    st.subheader(":violet[Average, median, and standard deviation aggregate statistics:]")
+    agg_var = st.selectbox("Aggregate Metric:", [*reverse_labels.keys()], index=0)
+    st.plotly_chart(mean_med_stats(df, reverse_labels[agg_var]))
 
     st.subheader(":violet[Distributions: Comparing distributions of different statistics across players:]")
     hist_var = st.selectbox("Distribution Metric:", [*reverse_labels.keys()], index=0)
@@ -121,33 +128,59 @@ $$
     st.subheader(":violet[Proportions of contributing statistics:]")
 
     pie_var = st.selectbox("Proportion Metric:", [key for key in reverse_labels.keys() if key not in \
-                                                  ["Adjusted Gross Score", "Handicap Differential", "Handicap Index"]], index=0)
+                                                  ["Adjusted Gross Score", "Handicap Differential", "Handicap Index"]], index=1)
     cols = st.columns([1 for i in names])
     for idx, name in enumerate(names):
         with cols[idx]:
             st.plotly_chart(pie_chart(df, reverse_labels[pie_var], name))
 
-    
-    st.subheader(":violet[Average, median, and standard deviation aggregate statistics:]")
-    agg_var = st.selectbox("Aggregate Metric:", [*reverse_labels.keys()], index=0)
-    st.plotly_chart(mean_med_stats(df, reverse_labels[agg_var]))
-
-    
-    st.subheader(":violet[Rolling average statistics:]")
-    roll_var = st.selectbox("Rolling Average Metric:", [*reverse_labels.keys()], index=0)
-    window = st.slider("Number of Rounds to Include in the Rolling Window:", min_value=5, max_value = 30) 
-    st.plotly_chart(rolling_avg(df, reverse_labels[roll_var], window))
-
 
     st.subheader(":violet[Adjusted Gross Score vs Contributing Statistics:]")
     scatter_var = st.selectbox("X-Variable:", [key for key in reverse_labels.keys() if key not in \
-                                                  ["Adjusted Gross Score", "Handicap Differential", "Five-Round Rolling Handicap", 
-                                                   "Ten-Round Rolling Handicap", "Twenty-Round Rolling Handicap"]], index=0)
+                                                  ["Adjusted Gross Score", "Handicap Differential", "Handicap Index"]], index=0)
     size_var = st.selectbox("Size-Variable (Optional):", [None] + [key for key in reverse_labels.keys() if key not in \
                                                   ["Adjusted Gross Score", "Handicap Differential", "Handicap Index"]], index=0)
     
     
     st.plotly_chart(scatter(data=df, column=reverse_labels[scatter_var], size=reverse_labels[size_var] if size_var else None)) 
+    
+    corr = df[["adj_gross_score", reverse_labels[scatter_var]]].corr().iloc[0,1]
+    st.write(f'Overall Pearson Correlation for :blue[_Adjusted Gross Score and {scatter_var}_]: :green[**{corr:.3f}**]')
+    
+    if abs(corr) <=.25:
+        st.write(f"The relationship between Adjusted Gross Score and {scatter_var} demonstrates a weak correlation, and therefore it is likely that this statistic is not significantly influencing your scores.")
+    elif .6 > corr > .25:
+        st.write(f"The relationship between Adjusted Gross Score and {scatter_var} demonstrates a moderate positive correlation, meaning that as {scatter_var} increases, Adjusted Gross Score will also increase and vice versa.")
+    elif corr >= .6:
+        st.write(f"The relationship between Adjusted Gross Score and {scatter_var} demonstrates a strong positive correlation, meaning that as {scatter_var} increases, Adjusted Gross Score will also increase and vice versa.")
+    elif -.6 < corr < -.25:
+        st.write(f"The relationship between Adjusted Gross Score and {scatter_var} demonstrates a moderate negative correlation, meaning that as {scatter_var} increases, Adjusted Gross Score will decrease and vice versa.")
+    elif corr <= -.6:
+        st.write(f"The relationship between Adjusted Gross Score and {scatter_var} demonstrates a strong negative correlation, meaning that as {scatter_var} increases, Adjusted Gross Score will decrease and vice versa.")
+
+    st.write("Player by Player Correlation Breakdown for Comparison:")
+
+    st.dataframe(df.groupby("name")[["adj_gross_score", reverse_labels[scatter_var]]].corr().reset_index()\
+            .rename(columns={reverse_labels[scatter_var]:"Correlation", "name":"Player Name"})\
+                 .loc[::2,["Player Name", "Correlation"]], hide_index=True)
+
+    # Sidebar - Bio info
+    st.sidebar.title('About Me:')
+    
+    # Variables for f-strings
+    linkedin_url = "https://www.linkedin.com/in/david-hartsman-data/"
+    github_url = "https://github.com/dvdhartsman"
+    medium_url = "https://medium.com/@dvdhartsman"
+    
+    linkedin_markdown = f'[LinkedIn]({linkedin_url})'
+    github_markdown = f'[GitHub]({github_url})'
+    medium_markdown = f'[Blog]({medium_url})'
+    
+    # Text display
+    st.sidebar.subheader('David Hartsman')
+    st.sidebar.markdown(f"{linkedin_markdown} | {github_markdown} | {medium_markdown}", unsafe_allow_html=True)
+    st.sidebar.write('dvdhartsman@gmail.com')
+    
 
 
 
