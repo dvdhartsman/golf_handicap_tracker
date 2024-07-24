@@ -56,6 +56,9 @@ $$
 
     st.subheader(":blue[While my friends and I collect some data...]")
     st.markdown("""I have generated some synthetic data to demonstrate the visualizations we will use to track and analyze our scores. This data is purely for purposes of demonstration, and some of the statistics and relationships shown will likely not reflect reality for most golfers. \n \nThat being said, I am still the best golfer based on synthetic data......""")
+
+    st.markdown(":blue[_A brief note about the plots:_]")
+    st.markdown("You can isolate a plot component by double-clicking on it in the legend, or you can toggle on/off individual plot items by clicking on the desired item in the legend. You can also click and drag over quadrants of graphs to zoom in on areas of interest. Click the home icon in the upper-right corner or double-click on the plot to zoom back out to the original scope. Finally, as you move your mouse cursor over the plots, you will notice hover-values that display additional information. Thank you and enjoy the dashboard")
     
     st.markdown("---")
     
@@ -96,6 +99,7 @@ $$
 
     st.markdown("---")
     st.subheader(":violet[Trends Over Time:]")
+    st.write("Use the dropdown menu to select a metric and the date slider to select a range of dates")
     trend_var = st.selectbox("Trend Metric:", [*reverse_labels.keys()], index=7)
     trend_data = df.dropna(subset=reverse_labels[trend_var])
 
@@ -113,19 +117,23 @@ $$
     st.plotly_chart(plot_statistics(trend_data.loc[(trend_data["date"] >= pd.to_datetime(start_date)) & (trend_data["date"] <= pd.to_datetime(end_date))], reverse_labels[trend_var]))
 
     st.subheader(":violet[Rolling average statistics:]")
+    st.write("Use the dropdown menu to select a metric and the slider to select the size of your window")
     roll_var = st.selectbox("Rolling Average Metric:", [*reverse_labels.keys()], index=0)
     window = st.slider("Number of Rounds to Include in the Rolling Window:", min_value=5, max_value = 30) 
     st.plotly_chart(rolling_avg(df, reverse_labels[roll_var], window))
 
     st.subheader(":violet[Average, median, and standard deviation aggregate statistics:]")
+    st.write("Use the dropdown menu to select a metric")
     agg_var = st.selectbox("Aggregate Metric:", [*reverse_labels.keys()], index=0)
     st.plotly_chart(mean_med_stats(df, reverse_labels[agg_var]))
 
     st.subheader(":violet[Distributions: Comparing distributions of different statistics across players:]")
+    st.write("Use the dropdown menu to select a metric")
     hist_var = st.selectbox("Distribution Metric:", [*reverse_labels.keys()], index=0)
     st.plotly_chart(histplot(df, reverse_labels[hist_var]))
 
     st.subheader(":violet[Proportions of contributing statistics:]")
+    st.write("Use the dropdown menu to select a metric")
 
     pie_var = st.selectbox("Proportion Metric:", [key for key in reverse_labels.keys() if key not in \
                                                   ["Adjusted Gross Score", "Handicap Differential", "Handicap Index"]], index=1)
@@ -136,6 +144,7 @@ $$
 
 
     st.subheader(":violet[Adjusted Gross Score vs Contributing Statistics:]")
+    st.write("Use the first dropdown menu to select a metric for the X-Axis and the second dropdown to optionally add a 'size' metric")
     scatter_var = st.selectbox("X-Variable:", [key for key in reverse_labels.keys() if key not in \
                                                   ["Adjusted Gross Score", "Handicap Differential", "Handicap Index"]], index=0)
     size_var = st.selectbox("Size-Variable (Optional):", [None] + [key for key in reverse_labels.keys() if key not in \
@@ -143,7 +152,9 @@ $$
     
     
     st.plotly_chart(scatter(data=df, column=reverse_labels[scatter_var], size=reverse_labels[size_var] if size_var else None)) 
-    
+
+
+    st.subheader(":violet[Feature Correlation:]")
     corr = df[["adj_gross_score", reverse_labels[scatter_var]]].corr().iloc[0,1]
     st.write(f'Overall Pearson Correlation for :blue[_Adjusted Gross Score and {scatter_var}_]: :green[**{corr:.3f}**]')
     
