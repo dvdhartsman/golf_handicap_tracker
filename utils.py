@@ -96,9 +96,9 @@ def fill_handicaps(data:pd.DataFrame) -> pd.DataFrame:
         values = get_handicap(data.loc[data["name"] == name], window=5)
         data.loc[data["name"] == name, "fiveRd_handicap"] = values
     
-        data.loc[data["name"] == name, "tenRd_handicap"] = get_handicap(df.loc[df["name"] == name], window=10)
+        data.loc[data["name"] == name, "tenRd_handicap"] = get_handicap(data.loc[data["name"] == name], window=10)
     
-        data.loc[data["name"] == name, "twentyRd_handicap"] = get_handicap(df.loc[df["name"] == name], window=20)
+        data.loc[data["name"] == name, "twentyRd_handicap"] = get_handicap(data.loc[data["name"] == name], window=20)
 
     return data
     
