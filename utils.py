@@ -103,7 +103,7 @@ def fill_handicaps(data:pd.DataFrame) -> pd.DataFrame:
     return data
     
         
-def plot_statistics(data, column):
+def plot_statistics(data, column, color_map:dict = {"Dave":'#636EFA', "Pete":'#EF553B', "Eric":'#00CC96'}):
 
     """ Creates a line plot of data tracking the values of a given column over time
 
@@ -111,6 +111,7 @@ def plot_statistics(data, column):
     ------------------
     data:pd.DataFrame | source of data for the values in the plot
     column:str | name of the column from data to plot
+    color_map:dict | dictionary of values to ensure color-coding-consistency across plots
 
     Returns:
     ------------------
@@ -130,16 +131,17 @@ def plot_statistics(data, column):
         "twentyRd_handicap": "Twenty-Round Rolling Handicap"
     }
         
-    if len(data.dropna(subset=column)["date"].unique()) < 50:
-        length = len(data.dropna(subset=column)["date"].unique()) 
-    else:
-        length = 50
+    # if len(data.dropna(subset=column)["date"].unique()) < 50:
+    #     length = len(data.dropna(subset=column)["date"].unique()) 
+    # else:
+    #     length = 50
 
-    date_cutoff = pd.Series(data.dropna(subset=column)["date"].unique()).sort_values().to_list()[-length]
+    # date_cutoff = pd.Series(data.dropna(subset=column)["date"].unique()).sort_values().to_list()[-length]
     
+    # .loc[data["date"] >= date_cutoff]
     
-    fig = px.line(data_frame=data.dropna(subset=column).loc[data["date"] >= date_cutoff],\
-                  x="date", y=column, color="name", markers=True, hover_name="name",\
+    fig = px.line(data_frame=data.dropna(subset=column),\
+                  x="date", y=column, color="name", color_discrete_map=color_map, markers=True, hover_name="name",\
                  title=f"{label_dict[column]}", labels={"date":"Date", column:label_dict[column]},
                  hover_data={"name":False})
     
@@ -177,12 +179,12 @@ def histplot(data:pd.DataFrame, column:str, color_map:dict = {"Dave":'#636EFA', 
     
     fig_h = px.histogram(data, x=column, nbins=len(data[column].unique()), \
                          labels={column:label_dict[column], "count":"Count"}, hover_name="name", color="name", hover_data={"name":True},
-                        color_discrete_map=color_map)
+                        color_discrete_map=color_map, marginal="box")
     
     
-    fig_h.update_layout(yaxis={"title":"Count"}, title=f'Distribution for {label_dict[column]}', barmode="overlay",
+    fig_h.update_layout(yaxis={"title":"Count"}, title=f'Distribution for {label_dict[column]}<br><sup>Boxplots Show Additional Distribution Detail</sup>', barmode="overlay",
                        legend={"title":"Player Name"})
-    fig_h.update_traces(marker_line_color='black', marker_line_width=1.5, opacity=.3,
+    fig_h.update_traces(marker_line_color='black', marker_line_width=1.5, opacity=.45,
                        hovertemplate=f"<b>%{{fullData.name}}</b><br><br>{label_dict[column]}: %{{x}}<br> No. of Rounds: %{{y}}")
     return fig_h
 
@@ -361,9 +363,9 @@ def rolling_avg(data:pd.DataFrame, column:str, window:int, color_map:dict={"Dave
     data = data.set_index("date").sort_index()
     data["rolling_avg"] = data.groupby("name")[column].transform(lambda t: t.rolling(window).mean())
     
-    fig = px.line(data_frame = data, y="rolling_avg", color="name", color_discrete_map=color_map, 
+    fig = px.line(data_frame = data.dropna(subset="rolling_avg"), y="rolling_avg", color="name", color_discrete_map=color_map, 
                  title=f"{window} Round Rolling Average - {label_dict[column]}", hover_name="name",
-                 labels={"rolling_avg":"Rolling Avg", "date":"Date Played"}, hover_data={"name":False})
+                 labels={"rolling_avg":"Rolling Avg", "date":"Date Played"}, hover_data={"name":False}, markers=True)
     fig.update_layout(legend={"title":"Player Name"})
     return fig
 
@@ -406,7 +408,7 @@ def scatter(data:pd.DataFrame, column:str, color_map:dict={"Dave":'#636EFA', "Pe
 
     data["jittered_col"] = data[column] + np.random.uniform(-jitter_strength, jitter_strength, size=len(data))
     
-    fig = px.scatter(data_frame=data, x="jittered_col", y="adj_gross_score", color="name", size=size,
+    fig = px.scatter(data_frame=data, x="jittered_col", y="adj_gross_score", color="name", color_discrete_map=color_map, size=size,
                      hover_name="name", labels={"adj_gross_score":"Adj. Score", "jittered_col":label_dict[column]}, 
                      title = title, hover_data={"name":False, "jittered_col":":.0f"})
 
