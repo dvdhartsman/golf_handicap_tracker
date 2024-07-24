@@ -269,6 +269,62 @@ def dist_plot(data:pd.DataFrame, column:str):
     return fig
 
 
+def mean_med_stats(data:pd.DataFrame, column:str, color_map:dict={"Dave":'#636EFA', "Pete":'#EF553B', "Eric":'#00CC96'}):
+    """
+    Function to generate a plotly barplots of mean and median column values
+
+    Args:
+    -----------
+    data: pd.DataFrame | source of data
+    column:str | value of interest to find Mean and Median values
+    color_map:dict | dictionary to ensure color-coding-consistency
+
+    Returns
+    -----------
+    plotly figure | barplot with Mean/Median/Stddev Values 
+
+    Errors
+    -----------
+    KeyError if data do not contain the correct columns
+    """
+
+    label_dict = {
+        "adj_gross_score":"Adjusted Gross Score", 
+        "handicap_diff": "Handicap Differential",
+        "putts": "Putts per Round",
+        "3_putts": "3-Putts per Round",
+        "fairways_hit": "Fairways Hit per Round",
+        "gir": "Greens in Regulation",
+        "penalty/ob": "Penalties / OB per Round",
+        "fiveRd_handicap": "Five-Round Rolling Handicap",
+        "tenRd_handicap": "Ten-Round Rolling Handicap",
+        "twentyRd_handicap": "Twenty-Round Rolling Handicap"
+    }
+    
+    # Grouping data by state and calculating median and mean
+    grouped = data.groupby("name")[column].agg(["median", "mean","std"]).sort_values(by="median", ascending=False)
+
+    # Resetting index to make 'state' a column for Plotly
+    grouped = grouped.reset_index().rename(columns={"median":"Median", "mean":"Average", "std":"Standard Deviation"})
+
+    # Creating Plotly figure
+    fig = px.bar(grouped, x='name', y=['Median', 'Average', "Standard Deviation"],
+                 labels={'value': label_dict[column], 'name': 'Player Name', "variable":"Statistic"},
+                 title=f'Mean and Median {label_dict[column]}<br><sup>Aggregate Statistics for Each Player</sup>', hover_name="name",
+                 hover_data={"name":False},
+                 template="seaborn", 
+                barmode='group')
+    
+    # Legend/layout
+    fig.update_layout(legend_title='Statistics', title={"x":0, "y":.85,})
+
+    fig.for_each_trace(lambda t: t.update(name=t.name.capitalize()))
+    fig.update_layout(yaxis=dict(tickformat='.2f'))
+    # Returning the Plotly figure
+    return fig
+
+
+
 def rolling_avg(data:pd.DataFrame, column:str, window:int, color_map:dict={"Dave":'#636EFA', "Pete":'#EF553B', "Eric":'#00CC96'}):
     """
     Function to generate a plotly lineplot of rolling mean column values

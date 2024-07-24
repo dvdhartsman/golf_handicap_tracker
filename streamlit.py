@@ -4,7 +4,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 import plotly.figure_factory as ff
 
-from utils import add_round, get_handicap, fill_handicaps, plot_statistics, histplot, pie_chart, dist_plot, rolling_avg, scatter
+from utils import add_round, get_handicap, fill_handicaps, plot_statistics, histplot, pie_chart, dist_plot, rolling_avg, scatter, mean_med_stats
 
 def main():
 
