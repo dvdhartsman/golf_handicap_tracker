@@ -45,7 +45,7 @@ def add_round(name:str, date:str, adj_gross_score:int, course_rating:np.number, 
     
     data.loc[len(data)] = row
     
-    return df
+    return data
 
 
 def get_handicap(data, window=5):
