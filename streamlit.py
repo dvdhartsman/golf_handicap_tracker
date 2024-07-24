@@ -4,8 +4,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 import plotly.figure_factory as ff
 import streamlit as st
-from utils import add_round, get_handicaps, fill_handicaps, plot_statistics, histplot, pie_chart, dist_plot, rolling_avg, scatter, mean_med_stats\
-find_round
+from utils import add_round, get_handicaps, fill_handicaps, plot_statistics, histplot, pie_chart, dist_plot, rolling_avg, scatter, mean_med_stats, find_round
 
 def main():
 
@@ -178,7 +177,19 @@ $$
 
     st.subheader(":violet[Search for a Specific Round:]")
 
-    round_date = st.date_input(min_value=min_date, max_value=max_date)
+    min_search_date = df['date'].min().date()
+    max_search_date = df['date'].max().date()
+    st.write("Use the first dropdown menu to select a date to search, then select an individual player for a graph of their data")
+    round_date = st.date_input("Choose a Date to Search:", min_value=min_search_date, max_value=max_search_date, value=None)
+    query_df = df.loc[df["date"] == pd.to_datetime(round_date)]
+    if query_df.empty:
+        st.subheader(":red[No records found for this date]")
+    
+    if not query_df.empty:
+        st.dataframe(query_df[["name"]+[*label_dict.keys()]].rename(columns=label_dict).rename(columns={"name":"Player"})\
+                     .drop(columns="Handicap Index"), hide_index=True, use_container_width=True)
+        for name in query_df["name"].unique():
+            st.plotly_chart(find_round(query_df, name, pd.to_datetime(round_date, format='YYYY-MM-dd')))
     
     
     # Sidebar - Bio info

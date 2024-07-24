@@ -534,7 +534,7 @@ def find_round(data:pd.DataFrame, name:str, date:pd.Timestamp='2024-07-22'):
             ))
 
         fig.update_layout(
-        title=f"Golf Round Data for {name} on {date}",
+        title=f"Golf Round Data for {name} on {date.date()}",
         xaxis_title="Features",
         yaxis_title="Values",
         barmode='group',
