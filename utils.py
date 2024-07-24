@@ -404,7 +404,7 @@ def scatter(data:pd.DataFrame, column:str, color_map:dict={"Dave":'#636EFA', "Pe
     else:
         title = f"Adj Score vs {label_dict[column]}<br><sup>X-Jittered for Visibility</sup>"
 
-    data["jittered_col"] = data[column] + np.random.uniform(-jitter_strength, jitter_strength, size=len(df))
+    data["jittered_col"] = data[column] + np.random.uniform(-jitter_strength, jitter_strength, size=len(data))
     
     fig = px.scatter(data_frame=data, x="jittered_col", y="adj_gross_score", color="name", size=size,
                      hover_name="name", labels={"adj_gross_score":"Adj. Score", "jittered_col":label_dict[column]}, 
