@@ -8,7 +8,7 @@ import plotly.figure_factory as ff
 
 
 def add_round(name:str, date:str, adj_gross_score:int, course_rating:np.number, slope_rating:np.number, \
-              putts:int, three_putts:int, fairways:int, gir:int, penalties:int, df:pd.DataFrame=df) -> pd.Series:
+              putts:int, three_putts:int, fairways:int, gir:int, penalties:int, data:pd.DataFrame) -> pd.Series:
     
     """ Given specified input data, a new row will be added to the dataframe
 
@@ -43,7 +43,7 @@ def add_round(name:str, date:str, adj_gross_score:int, course_rating:np.number, 
 
     row["handicap_diff"] = ((row["adj_gross_score"] - row["course_rating"]) * 113) / row["slope_rating"]
     
-    df.loc[len(df)] = row
+    data.loc[len(data)] = row
     
     return df
 
@@ -71,7 +71,7 @@ def get_handicap(data, window=5):
         scores = 8
     
     data = data.sort_values(by="date", ascending=True)
-    if len(df) < window:
+    if len(data) < window:
         return pd.Series([None] * len(series), index=data.index)
     rolling_means = data["handicap_diff"].rolling(window).apply(lambda x: x.nsmallest(scores).mean(), raw=False)
     
@@ -252,7 +252,7 @@ def dist_plot(data:pd.DataFrame, column:str):
 
         player_kde = ff.create_distplot([player_data], group_labels=[player], show_hist=False, show_rug=False)
     
-        # Male KDE Plot
+        # Player KDE Plot
         fig.add_trace(go.Scatter(x=player_kde['data'][0]['x'], y=player_kde['data'][0]['y'], 
                                  mode='lines', name=player, fill='tozeroy', line=dict(color=colors[i]), opacity=0.9,
                                  hoverinfo='x', xhoverformat=".2f", hovertemplate=f'{column.replace("_", " ").title()}: %{{x:.2f}}'))
@@ -271,7 +271,7 @@ def dist_plot(data:pd.DataFrame, column:str):
 
 def rolling_avg(data:pd.DataFrame, column:str, window:int, color_map:dict={"Dave":'#636EFA', "Pete":'#EF553B', "Eric":'#00CC96'}):
     """
-    Function to generate a plotly lineplots of rolling mean column values
+    Function to generate a plotly lineplot of rolling mean column values
 
     Args:
     -----------
