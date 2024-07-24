@@ -48,6 +48,64 @@ def add_round(name:str, date:str, adj_gross_score:int, course_rating:np.number, 
     return data
 
 
+# Loop to create fake data
+def generate_data(data:pd.DataFrame, player_list:list=["Pete", "Dave", "Eric"], start_date:pd.Timestamp=pd.Timestamp.today()):
+    """
+    Create synthetic data for demonstration purposes and add it to data in place
+    
+    Args:
+    --------------
+    data:pd.DataFrame | dataframe to add synthetic data to
+
+    Returns:
+    --------------
+    None: | the function updates the data argument in place
+
+    """
+    today = start_date
+    
+    for n in player_list:
+        # Populate the fields for the add_round() call
+        avg_score = np.random.randint(low=80, high=90)
+        avg_putts = np.random.randint(low=18, high=54)
+        avg_three_putts = np.random.randint(low=0, high=10)
+        avg_fairways = np.random.randint(low=1, high=14)
+        avg_gir = np.random.randint(low=0, high=18)
+        avg_penalities = np.random.randint(low=0, high=10)
+        for i in range(100):
+            name = n
+            date = today + pd.Timedelta(days=i * np.random.choice([2,3]))
+            adj_gross_score = int(max(np.random.normal(loc=avg_score, scale=5, size=1), 72))
+            course_rating = float(np.random.choice([71, 71.5, 72, 72.5, 73, 73.5]))
+            slope_rating = int(np.random.randint(low=110, high=130, size=1))
+            putts = int(max(np.random.normal(loc=avg_putts, scale=5, size=1), 0))
+            if putts > 54:
+                putts = 54
+            elif putts < 18:
+                putts = 18
+            three_putts = int(max(np.random.normal(loc=avg_three_putts, scale = 1, size = 1), 0))
+            if three_putts > 18:
+                three_putts = 18
+            elif three_putts <= 0:
+                three_putts = 0
+            fairways = int(max(np.random.normal(loc=avg_fairways, scale = 2, size = 1),0))
+            if fairways > 18:
+                fairways = 18
+            elif fairways <= 0:
+                fairways = 0
+            gir = int(max(np.random.normal(loc=avg_gir, scale = 2, size = 1),0))
+            if gir > 18:
+                gir = 18
+            elif gir <= 0:
+                gir = 0
+            penalties = int(max(np.random.normal(loc=avg_penalities, scale = 2, size = 1),0))
+        
+            # Call function and add to the df
+            add_round(name=name, date=date, adj_gross_score=adj_gross_score, course_rating=course_rating, 
+                      slope_rating=slope_rating, putts=putts, three_putts=three_putts, fairways=fairways, gir=gir, 
+                      penalties=penalties, data=data)
+
+
 def get_handicaps(data:pd.DataFrame):
     """
     Get handicap values for each player in the data based on the required logic/calculations
