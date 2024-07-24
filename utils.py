@@ -56,6 +56,8 @@ def generate_data(data:pd.DataFrame, player_list:list=["Pete", "Dave", "Eric"], 
     Args:
     --------------
     data:pd.DataFrame | dataframe to add synthetic data to
+    player_list:list | list of names to generate synthetic data for
+    start_date:pd.Timestamp | date to use as the earliest date for the synthetic data 
 
     Returns:
     --------------
@@ -487,3 +489,59 @@ def scatter(data:pd.DataFrame, column:str, color_map:dict={"Dave":'#636EFA', "Pe
     fig.update_traces(opacity=.6)
     
     return fig
+
+
+def find_round(data:pd.DataFrame, name:str, date:pd.Timestamp='2024-07-22'):
+    """
+    Function to query a specific date for golf round data
+
+    Args:
+    ---------------
+    data:pd.DataFrame | source of data
+    names:str | player name to populate data for
+    date:pd.Timestamp | date to search whether a round was played
+    
+    Returns:
+    ---------------
+    fig:plotly.graph_objects.Figure | barplot for each player from {names} who played a round of golf on {date}
+    """
+    label_dict = {
+        "adj_gross_score":"Adjusted Score", 
+        "handicap_diff": "Handicap Differential",
+        "putts": "Putts",
+        "3_putts": "3-Putts",
+        "fairways_hit": "Fwys Hit",
+        "gir": "G.I.R.",
+        "penalty/ob": "Penalties/OB",
+        "handicap":"Handicap Index",
+    }
+    
+    features = ["putts", "3_putts", "fairways_hit", "gir", "penalty/ob", "adj_gross_score"]
+    color_list = px.colors.qualitative.Bold
+
+    fig = go.Figure()
+    player_data = data_frame = data.loc[(data["date"] == date) & (data["name"] == name)]
+    
+    if not player_data.empty:
+        
+        # Create a bar for each feature
+        for idx, feature in enumerate(features):
+            fig.add_trace(go.Bar(
+                x=[feature],
+                y=player_data[feature].values,
+                name=label_dict[feature],
+                marker={"color":color_list[idx]}
+            ))
+
+        fig.update_layout(
+        title=f"Golf Round Data for {name} on {date}",
+        xaxis_title="Features",
+        yaxis_title="Values",
+        barmode='group',
+        legend={"title":"Data Points:"},
+        xaxis=dict(
+                tickvals=features,
+                ticktext=[label_dict[feature] for feature in features])
+        )
+    
+        return fig

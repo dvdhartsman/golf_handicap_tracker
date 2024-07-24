@@ -4,7 +4,8 @@ import plotly.express as px
 import plotly.graph_objects as go
 import plotly.figure_factory as ff
 import streamlit as st
-from utils import add_round, get_handicaps, fill_handicaps, plot_statistics, histplot, pie_chart, dist_plot, rolling_avg, scatter, mean_med_stats
+from utils import add_round, get_handicaps, fill_handicaps, plot_statistics, histplot, pie_chart, dist_plot, rolling_avg, scatter, mean_med_stats\
+find_round
 
 def main():
 
@@ -175,6 +176,11 @@ $$
             .rename(columns={reverse_labels[scatter_var]:"Correlation", "name":"Player Name"})\
                  .loc[::2,["Player Name", "Correlation"]], hide_index=True)
 
+    st.subheader(":violet[Search for a Specific Round:]")
+
+    round_date = st.date_input(min_value=min_date, max_value=max_date)
+    
+    
     # Sidebar - Bio info
     st.sidebar.title('About Me:')
     
