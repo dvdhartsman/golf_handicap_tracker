@@ -121,8 +121,7 @@ $$
     st.subheader(":violet[Proportions of contributing statistics:]")
 
     pie_var = st.selectbox("Proportion Metric:", [key for key in reverse_labels.keys() if key not in \
-                                                  ["Adjusted Gross Score", "Handicap Differential", "Five-Round Rolling Handicap", 
-                                                   "Ten-Round Rolling Handicap", "Twenty-Round Rolling Handicap"]], index=0)
+                                                  ["Adjusted Gross Score", "Handicap Differential", "Handicap Index"]], index=0)
     cols = st.columns([1 for i in names])
     for idx, name in enumerate(names):
         with cols[idx]:
@@ -145,8 +144,7 @@ $$
                                                   ["Adjusted Gross Score", "Handicap Differential", "Five-Round Rolling Handicap", 
                                                    "Ten-Round Rolling Handicap", "Twenty-Round Rolling Handicap"]], index=0)
     size_var = st.selectbox("Size-Variable (Optional):", [None] + [key for key in reverse_labels.keys() if key not in \
-                                                  ["Adjusted Gross Score", "Handicap Differential", "Five-Round Rolling Handicap", 
-                                                   "Ten-Round Rolling Handicap", "Twenty-Round Rolling Handicap"]], index=0)
+                                                  ["Adjusted Gross Score", "Handicap Differential", "Handicap Index"]], index=0)
     
     
     st.plotly_chart(scatter(data=df, column=reverse_labels[scatter_var], size=reverse_labels[size_var] if size_var else None)) 

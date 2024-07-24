@@ -151,9 +151,7 @@ def plot_statistics(data, column, color_map:dict = {"Dave":'#636EFA', "Pete":'#E
         "fairways_hit": "Fairways Hit per Round",
         "gir": "Greens in Regulation",
         "penalty/ob": "Penalties / OB per Round",
-        "fiveRd_handicap": "Five-Round Rolling Handicap",
-        "tenRd_handicap": "Ten-Round Rolling Handicap",
-        "twentyRd_handicap": "Twenty-Round Rolling Handicap"
+        "handicap":"Handicap Index"
     }
         
     # if len(data.dropna(subset=column)["date"].unique()) < 50:
@@ -197,9 +195,7 @@ def histplot(data:pd.DataFrame, column:str, color_map:dict = {"Dave":'#636EFA', 
         "fairways_hit": "Fairways Hit per Round",
         "gir": "Greens in Regulation",
         "penalty/ob": "Penalties / OB per Round",
-        "fiveRd_handicap": "Five-Round Rolling Handicap",
-        "tenRd_handicap": "Ten-Round Rolling Handicap",
-        "twentyRd_handicap": "Twenty-Round Rolling Handicap"
+        "handicap":"Handicap Index"
     }
     
     fig_h = px.histogram(data, x=column, nbins=len(data[column].unique()), \
@@ -237,9 +233,7 @@ def pie_chart(data:pd.DataFrame, column:str, player:str=None):
         "fairways_hit": "Fairways Hit per Round",
         "gir": "Greens in Regulation",
         "penalty/ob": "Penalties / OB per Round",
-        "fiveRd_handicap": "Five-Round Rolling Handicap",
-        "tenRd_handicap": "Ten-Round Rolling Handicap",
-        "twentyRd_handicap": "Twenty-Round Rolling Handicap"
+        "handicap":"Handicap Index"
     }
     
     if player:
@@ -323,9 +317,7 @@ def mean_med_stats(data:pd.DataFrame, column:str, color_map:dict={"Dave":'#636EF
         "fairways_hit": "Fairways Hit per Round",
         "gir": "Greens in Regulation",
         "penalty/ob": "Penalties / OB per Round",
-        "fiveRd_handicap": "Five-Round Rolling Handicap",
-        "tenRd_handicap": "Ten-Round Rolling Handicap",
-        "twentyRd_handicap": "Twenty-Round Rolling Handicap"
+        "handicap":"Handicap Index"
     }
     
     # Grouping data by state and calculating median and mean
@@ -380,9 +372,7 @@ def rolling_avg(data:pd.DataFrame, column:str, window:int, color_map:dict={"Dave
         "fairways_hit": "Fairways Hit per Round",
         "gir": "Greens in Regulation",
         "penalty/ob": "Penalties / OB per Round",
-        "fiveRd_handicap": "Five-Round Rolling Handicap",
-        "tenRd_handicap": "Ten-Round Rolling Handicap",
-        "twentyRd_handicap": "Twenty-Round Rolling Handicap"
+        "handicap":"Handicap Index"
     }
 
     data = data.set_index("date").sort_index()
@@ -421,9 +411,7 @@ def scatter(data:pd.DataFrame, column:str, color_map:dict={"Dave":'#636EFA', "Pe
         "fairways_hit": "Fairways Hit per Round",
         "gir": "Greens in Regulation",
         "penalty/ob": "Penalties / OB per Round",
-        "fiveRd_handicap": "Five-Round Rolling Handicap",
-        "tenRd_handicap": "Ten-Round Rolling Handicap",
-        "twentyRd_handicap": "Twenty-Round Rolling Handicap"
+        "handicap":"Handicap Index"
     }
 
     if size:
