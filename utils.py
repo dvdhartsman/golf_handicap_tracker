@@ -48,34 +48,59 @@ def add_round(name:str, date:str, adj_gross_score:int, course_rating:np.number, 
     return data
 
 
-def get_handicap(data, window=5):
-
+def get_handicaps(data:pd.DataFrame):
     """
-    Return a pd.Series of handicap values based on the window of rounds desired
+    Get handicap values for each player in the data based on the required logic/calculations
 
     Args:
-    --------------
-    data: pd.DataFrame | dataframe containing all round data filtered by player name
-    window: int | number of rounds for which your handicap should be based on
+    -----------------
+    data:pd.DataFrame | source of data
 
     Returns:
-    ---------------
-    rolling_means: pd.Series | a Series of values containing the calculated handicap scores
+    -----------------
+    data:pd.DataFrame | updated data with new handicap column
     """
 
-    if window == 5:
-        scores = 3
-    elif window == 10:
-        scores = 5
-    else:
-        scores = 8
+    # Sort the DataFrame by date
+    data = data.sort_values(by="date")
     
-    data = data.sort_values(by="date", ascending=True)
-    if len(data) < window:
-        return pd.Series([None] * len(series), index=data.index)
-    rolling_means = data["handicap_diff"].rolling(window).apply(lambda x: x.nsmallest(scores).mean(), raw=False)
+    # Initialize the handicap column
+    data['handicap'] = np.nan
     
-    return rolling_means
+    # Process each player individually
+    for player in data["name"].unique():
+        player_df = data.loc[data["name"] == player].reset_index(drop=True)
+        
+        for i, row in player_df.iterrows():
+            if i < 2:
+                player_df.loc[i, "handicap"] = np.nan
+            elif i == 2:
+                player_df.loc[i, "handicap"] = player_df.loc[:i, "handicap_diff"].min() * 0.96 - 2
+            elif i == 3:
+                player_df.loc[i, "handicap"] = player_df.loc[:i, "handicap_diff"].min() * 0.96 - 1
+            elif i == 4:
+                player_df.loc[i, "handicap"] = player_df.loc[:i, "handicap_diff"].min() * 0.96
+            elif i == 5:
+                player_df.loc[i, "handicap"] = player_df.loc[:i, "handicap_diff"].nsmallest(2).mean() * 0.96 - 1
+            elif 6 <= i <= 7:
+                player_df.loc[i, "handicap"] = player_df.loc[:i, "handicap_diff"].nsmallest(2).mean() * 0.96
+            elif 8 <= i <= 10:
+                player_df.loc[i, "handicap"] = player_df.loc[:i, "handicap_diff"].nsmallest(3).mean() * 0.96
+            elif 11 <= i <= 13:
+                player_df.loc[i, "handicap"] = player_df.loc[:i, "handicap_diff"].nsmallest(4).mean() * 0.96
+            elif 14 <= i <= 15:
+                player_df.loc[i, "handicap"] = player_df.loc[:i, "handicap_diff"].nsmallest(5).mean() * 0.96
+            elif 16 <= i <= 17:
+                player_df.loc[i, "handicap"] = player_df.loc[:i, "handicap_diff"].nsmallest(6).mean() * 0.96
+            elif i == 18:
+                player_df.loc[i, "handicap"] = player_df.loc[:i, "handicap_diff"].nsmallest(7).mean() * 0.96
+            elif i >= 19:
+                player_df.loc[i, "handicap"] = player_df.loc[i-20:i, "handicap_diff"].nsmallest(8).mean() * 0.96
+        
+        # Update the main DataFrame with the calculated handicaps
+        data.loc[data["name"] == player, "handicap"] = player_df["handicap"].values
+
+    return data
 
 
 def fill_handicaps(data:pd.DataFrame) -> pd.DataFrame:
