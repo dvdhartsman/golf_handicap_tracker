@@ -96,6 +96,12 @@ def generate_data(data:pd.DataFrame, player_list:list=["Pete", "Dave", "Eric"], 
         avg_fairways = np.random.randint(low=1, high=14)
         avg_gir = np.random.randint(low=0, high=18)
         avg_penalities = np.random.randint(low=0, high=10)
+        avg_birdies = np.random.randint(low=0, high=2)
+        avg_dbl_plus = np.random.randint(low=0, high=3)
+        avg_profit_loss = np.random.choice([*np.arange(-5, 5.5, .5)])
+
+        "birdies", "dbl_bogeys_plus", "profit/loss"
+        
         for i in range(100):
             name = n
             date = today + pd.Timedelta(days=i * np.random.choice([2,3]))
@@ -123,11 +129,17 @@ def generate_data(data:pd.DataFrame, player_list:list=["Pete", "Dave", "Eric"], 
             elif gir <= 0:
                 gir = 0
             penalties = int(max(np.random.normal(loc=avg_penalities, scale = 2, size = 1),0))
+            birdies = int(max(np.random.normal(loc=avg_birdies, scale = 1, size = 1),0))
+            dbl_bogeys = int(max(np.random.normal(loc=avg_birdies, scale = 1, size = 1),0))
+            profit_loss = round(max(np.random.normal(loc=avg_birdies, scale = 1, size = 1),0) * 2) / 2 
         
             # Call function and add to the df
             data.loc[len(data)] = add_round(name=name, date=date, adj_gross_score=adj_gross_score, course_rating=course_rating, 
-                      slope_rating=slope_rating, putts=putts, three_putts=three_putts, fairways=fairways, gir=gir, 
-                      penalties=penalties, calc_diff=False)  # calc_diff = False to save on computational resources by performing vector op
+                                            slope_rating=slope_rating, putts=putts,
+                                            three_putts=three_putts, fairways=fairways, gir=gir, penalties=penalties, birdies=birdies, 
+                                            dbl_bogeys_plus=dbl_bogeys, profit_loss=profit_loss,
+                                            calc_diff=False)  
+            # calc_diff = False to save on computational resources by performing vector op
 
 
 
