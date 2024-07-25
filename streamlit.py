@@ -103,37 +103,37 @@ $$
         st.write('Switch back to the "Fake Data" tab to see all of the available visualizations')
         st.stop()
         
-    # Give the option to add data
-    st.subheader(":violet[Add your own data?:]")
-    col1, col2 = st.columns([1,1])
-    with col1:
-        rd_name = st.text_input("Name:")
-        rd_date = st.date_input("Date Played:")
-        rd_adj_score = st.number_input("Adjusted Gross Score (Must know single hole limits)")
-        rd_cr_rating = st.number_input("Course Rating:")
-        rd_slope_rating = st.number_input("Slope Rating:")
-        rd_putts = st.number_input("Number of Putts:", step=1)
-        rd_three_putts = st.number_input("Number of 3-Putts:", step=1)
-    with col2:
-        rd_fairways = st.number_input("Number of Fairways Hit:", step=1)
-        rd_gir = st.number_input("Number of Greens in Regulation:", step=1)
-        rd_penalty = st.number_input("Number of Penalty Shots:", step=1)
-        rd_birdies = st.number_input("Number of Birdies:", step=1)
-        rd_db_bogeys_plus = st.number_input("Number of Double-Bogeys or Worse:", step=1)
-        profit_loss = st.number_input("Profit/Loss (in betting units)")
+    # # Give the option to add data
+    # st.subheader(":violet[Add your own data?:]")
+    # col1, col2 = st.columns([1,1])
+    # with col1:
+    #     rd_name = st.text_input("Name:")
+    #     rd_date = st.date_input("Date Played:")
+    #     rd_adj_score = st.number_input("Adjusted Gross Score (Must know single hole limits)")
+    #     rd_cr_rating = st.number_input("Course Rating:")
+    #     rd_slope_rating = st.number_input("Slope Rating:")
+    #     rd_putts = st.number_input("Number of Putts:", step=1)
+    #     rd_three_putts = st.number_input("Number of 3-Putts:", step=1)
+    # with col2:
+    #     rd_fairways = st.number_input("Number of Fairways Hit:", step=1)
+    #     rd_gir = st.number_input("Number of Greens in Regulation:", step=1)
+    #     rd_penalty = st.number_input("Number of Penalty Shots:", step=1)
+    #     rd_birdies = st.number_input("Number of Birdies:", step=1)
+    #     rd_db_bogeys_plus = st.number_input("Number of Double-Bogeys or Worse:", step=1)
+    #     profit_loss = st.number_input("Profit/Loss (in betting units)")
 
-    if st.button("Add Round?"):
-        # Add the round to the df
-        df.loc[len(df)] = add_round(name=rd_name, date=str(rd_date), adj_gross_score=rd_adj_score, course_rating=rd_cr_rating,
-                                    slope_rating=rd_slope_rating, putts=rd_putts, three_putts=rd_three_putts,
-                                    fairways=rd_fairways, gir=rd_gir, penalties=rd_penalty, birdies=rd_birdies,
-                                    dbl_bogeys_plus=rd_db_bogeys_plus, profit_loss=profit_loss, calc_diff=True)
+    # if st.button("Add Round?"):
+    #     # Add the round to the df
+    #     df.loc[len(df)] = add_round(name=rd_name, date=str(rd_date), adj_gross_score=rd_adj_score, course_rating=rd_cr_rating,
+    #                                 slope_rating=rd_slope_rating, putts=rd_putts, three_putts=rd_three_putts,
+    #                                 fairways=rd_fairways, gir=rd_gir, penalties=rd_penalty, birdies=rd_birdies,
+    #                                 dbl_bogeys_plus=rd_db_bogeys_plus, profit_loss=profit_loss, calc_diff=True)
         
-        # Update handicaps where applicable
-        df = get_handicaps(df)
+    #     # Update handicaps where applicable
+    #     df = get_handicaps(df)
         
-        st.write("Check out your new entry at the bottom of the dataframe")
-        st.dataframe(df.drop(columns="jittered_col").tail(), hide_index=True, use_container_width=True)
+    #     st.write("Check out your new entry at the bottom of the dataframe")
+    #     st.dataframe(df.drop(columns="jittered_col").tail(), hide_index=True, use_container_width=True)
 
     # def add_round(name:str, date:str, adj_gross_score:int, course_rating:np.number, slope_rating:np.number, \
     #           putts:int=np.nan, three_putts:int=np.nan, fairways:int=np.nan, gir:int=np.nan, penalties:int=np.nan, birdies:int=np.nan, dbl_bogeys_plus:int=np.nan, profit_loss:float=np.nan, calc_diff:bool=True) -> pd.Series:
