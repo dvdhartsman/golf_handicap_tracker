@@ -116,6 +116,7 @@ def main():
     # Colors for plots to avoid repeating colors
     color_map = dict(zip([name for name in st.session_state.df["name"].unique()], px.colors.qualitative.Vivid))
 
+    st.dataframe(st.session_state.df)
 
     # Useful for labels, titles of plots
     label_dict = {
@@ -127,16 +128,16 @@ def main():
         "gir": "Greens in Regulation",
         "penalty/ob": "Penalties / OB per Round",
         "handicap":"Handicap Index",
-        # "birdies":"Birdies",
-        # "dbl_bogeys_plus":"Double Bogey or Worse",
-        # "profit/loss":"Profit/Loss"
+        "birdies":"Birdies",
+        "dbl_bogeys_plus":"Double Bogey or Worse",
+        "profit/loss":"Profit/Loss"
     }
+
+    # Also useful for labeling, titling, etc.
+    reverse_labels = {val:key for key, val in label_dict.items()}
 
 
  # -------------------- # Synthetic Data Display ----------------------   
-    
-    # Also useful for labeling, titling, etc.
-    reverse_labels = {val:key for key, val in label_dict.items()}
     
     # Numerical handicap displays for each player
     st.markdown("""<div style="text-align: center; font-size:40px; color:gold">

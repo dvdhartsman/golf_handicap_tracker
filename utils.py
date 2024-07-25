@@ -99,8 +99,6 @@ def generate_data(data:pd.DataFrame, player_list:list=["Pete", "Dave", "Eric"], 
         avg_birdies = np.random.randint(low=0, high=2)
         avg_dbl_plus = np.random.randint(low=0, high=3)
         avg_profit_loss = np.random.choice([*np.arange(-5, 5.5, .5)])
-
-        "birdies", "dbl_bogeys_plus", "profit/loss"
         
         for i in range(100):
             name = n
@@ -130,8 +128,8 @@ def generate_data(data:pd.DataFrame, player_list:list=["Pete", "Dave", "Eric"], 
                 gir = 0
             penalties = int(max(np.random.normal(loc=avg_penalities, scale = 2, size = 1),0))
             birdies = int(max(np.random.normal(loc=avg_birdies, scale = 1, size = 1),0))
-            dbl_bogeys = int(max(np.random.normal(loc=avg_birdies, scale = 1, size = 1),0))
-            profit_loss = round(max(float(np.random.normal(loc=avg_birdies, scale = 1, size = 1)), 0) * 2) / 2 
+            dbl_bogeys = int(max(np.random.normal(loc=avg_dbl_plus, scale = 1, size = 1),0))
+            profit_loss = round(float(np.random.normal(loc=avg_profit_loss, scale = 1, size = 1)) * 2) / 2 
         
             # Call function and add to the df
             data.loc[len(data)] = add_round(name=name, date=date, adj_gross_score=adj_gross_score, course_rating=course_rating, 
@@ -247,7 +245,10 @@ def plot_statistics(data, column, color_map:dict = {"Dave":'#636EFA', "Pete":'#E
         "fairways_hit": "Fairways Hit per Round",
         "gir": "Greens in Regulation",
         "penalty/ob": "Penalties / OB per Round",
-        "handicap":"Handicap Index"
+        "handicap":"Handicap Index",
+        "birdies":"Birdies",
+        "dbl_bogeys_plus":"Double Bogey or Worse",
+        "profit/loss":"Profit/Loss"
     }
         
     # if len(data.dropna(subset=column)["date"].unique()) < 50:
@@ -291,7 +292,10 @@ def histplot(data:pd.DataFrame, column:str, color_map:dict = {"Dave":'#636EFA', 
         "fairways_hit": "Fairways Hit per Round",
         "gir": "Greens in Regulation",
         "penalty/ob": "Penalties / OB per Round",
-        "handicap":"Handicap Index"
+        "handicap":"Handicap Index",
+        "birdies":"Birdies",
+        "dbl_bogeys_plus":"Double Bogey or Worse",
+        "profit/loss":"Profit/Loss"
     }
     
     fig_h = px.histogram(data, x=column, nbins=len(data[column].unique()), \
@@ -329,7 +333,10 @@ def pie_chart(data:pd.DataFrame, column:str, player:str=None):
         "fairways_hit": "Fairways Hit per Round",
         "gir": "Greens in Regulation",
         "penalty/ob": "Penalties / OB per Round",
-        "handicap":"Handicap Index"
+        "handicap":"Handicap Index",
+        "birdies":"Birdies",
+        "dbl_bogeys_plus":"Double Bogey or Worse",
+        "profit/loss":"Profit/Loss"
     }
     
     if player:
@@ -413,7 +420,10 @@ def mean_med_stats(data:pd.DataFrame, column:str, color_map:dict={"Dave":'#636EF
         "fairways_hit": "Fairways Hit per Round",
         "gir": "Greens in Regulation",
         "penalty/ob": "Penalties / OB per Round",
-        "handicap":"Handicap Index"
+        "handicap":"Handicap Index",
+        "birdies":"Birdies",
+        "dbl_bogeys_plus":"Double Bogey or Worse",
+        "profit/loss":"Profit/Loss"
     }
     
     # Grouping data by state and calculating median and mean
@@ -468,7 +478,10 @@ def rolling_avg(data:pd.DataFrame, column:str, window:int, color_map:dict={"Dave
         "fairways_hit": "Fairways Hit per Round",
         "gir": "Greens in Regulation",
         "penalty/ob": "Penalties / OB per Round",
-        "handicap":"Handicap Index"
+        "handicap":"Handicap Index",
+        "birdies":"Birdies",
+        "dbl_bogeys_plus":"Double Bogey or Worse",
+        "profit/loss":"Profit/Loss"
     }
 
     data = data.set_index("date").sort_index()
@@ -507,7 +520,10 @@ def scatter(data:pd.DataFrame, column:str, color_map:dict={"Dave":'#636EFA', "Pe
         "fairways_hit": "Fairways Hit per Round",
         "gir": "Greens in Regulation",
         "penalty/ob": "Penalties / OB per Round",
-        "handicap":"Handicap Index"
+        "handicap":"Handicap Index",
+        "birdies":"Birdies",
+        "dbl_bogeys_plus":"Double Bogey or Worse",
+        "profit/loss":"Profit/Loss"
     }
 
     if size:
@@ -550,6 +566,9 @@ def find_round(data:pd.DataFrame, name:str, date:pd.Timestamp='2024-07-22'):
         "gir": "G.I.R.",
         "penalty/ob": "Penalties/OB",
         "handicap":"Handicap Index",
+        "birdies":"Birdies",
+        "dbl_bogeys_plus":"Double Bogey or Worse",
+        "profit/loss":"Profit/Loss"
     }
     
     features = ["putts", "3_putts", "fairways_hit", "gir", "penalty/ob", "adj_gross_score"]
