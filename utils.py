@@ -130,21 +130,6 @@ def generate_data(data:pd.DataFrame, player_list:list=["Pete", "Dave", "Eric"], 
                       penalties=penalties, calc_diff=False)  # calc_diff = False to save on computational resources by performing vector op
 
 
-def handicap_differentials(data:pd.DataFrame) -> pd.Series:
-    """
-    apply the handicap differential calculation for each round of golf entered
-
-    Args:
-    -------------
-    data:pd.DataFrame | source of data
-
-    Returns:
-    -------------
-    pd.Series | series of handicap differential values
-    """
-    return ((data["adj_gross_score"] - data["course_rating"]) * 113) / data["slope_rating"]
-
-
 
 def get_handicaps(data:pd.DataFrame):
     """
@@ -201,6 +186,7 @@ def get_handicaps(data:pd.DataFrame):
     return data
 
 
+# Dead function
 def fill_handicaps(data:pd.DataFrame) -> pd.DataFrame:
     """ Apply the get_handicap() function for each player in the data for 5, 10, and 20 round windows
 
