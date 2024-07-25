@@ -287,12 +287,13 @@ $$
     max_search_date = df['date'].max().date()
     st.write("Use the first dropdown menu to select a date to search, then select an individual player for a graph of their data")
     round_date = st.date_input("Choose a Date to Search:", min_value=min_search_date, max_value=max_search_date, value=None)
+    
     query_df = df.loc[df["date"] == pd.to_datetime(round_date)]
     if query_df.empty:
         st.subheader(":red[No records found for this date]")
     
     if not query_df.empty:
-        st.dataframe(query_df[["name"]+[*label_dict.keys()]].rename(columns=label_dict).rename(columns={"name":"Player"})\
+        st.dataframe(query_df[["name"]+[key for key in label_dict.keys() if key not in ['birdies', 'dbl_bogeys_plus', ### EDIT LATER ### 'profit/loss']]].rename(columns=label_dict).rename(columns={"name":"Player"})\
                      .drop(columns="Handicap Index"), hide_index=True, use_container_width=True)
         for name in query_df["name"].unique():
             st.plotly_chart(find_round(query_df, name, pd.to_datetime(round_date, format='YYYY-MM-dd')))
