@@ -7,33 +7,38 @@ import streamlit as st
 from utils import add_round, get_handicaps, fill_handicaps, plot_statistics, histplot, pie_chart, dist_plot, rolling_avg, scatter, mean_med_stats, find_round, handicap_differentials, total_profit
 
 
-# Colors for plots to avoid repeating colors
-color_map = dict(zip([name for name in st.session_state.df["name"].unique()], px.colors.qualitative.Vivid))
-
-
-# Useful for labels, titles of plots
-label_dict = {
-    "adj_gross_score":"Adjusted Gross Score", 
-    "handicap_diff": "Handicap Differential",
-    "putts": "Putts per Round",
-    "3_putts": "3-Putts per Round",
-    "fairways_hit": "Fairways Hit per Round",
-    "gir": "Greens in Regulation",
-    "penalty/ob": "Penalties / OB per Round",
-    "handicap":"Handicap Index",
-    "birdies":"Birdies",
-    "dbl_bogeys_plus":"Double or Worse",
-    "profit/loss":"Profit/Loss"
-}
-
-# Also useful for labeling, titling, etc.
-reverse_labels = {val:key for key, val in label_dict.items()}
-
 
 def fake_data():
     """
     Display plots and input options for the simulated data
     """
+
+    # Data load
+    if "df" not in st.session_state:
+        st.session_state.df = pd.read_csv("synthetic_data.csv", parse_dates=["date"])   
+
+    # Colors for plots to avoid repeating colors
+    color_map = dict(zip([name for name in st.session_state.df["name"].unique()], px.colors.qualitative.Vivid))
+
+
+    # Useful for labels, titles of plots
+    label_dict = {
+        "adj_gross_score":"Adjusted Gross Score", 
+        "handicap_diff": "Handicap Differential",
+        "putts": "Putts per Round",
+        "3_putts": "3-Putts per Round",
+        "fairways_hit": "Fairways Hit per Round",
+        "gir": "Greens in Regulation",
+        "penalty/ob": "Penalties / OB per Round",
+        "handicap":"Handicap Index",
+        "birdies":"Birdies",
+        "dbl_bogeys_plus":"Double or Worse",
+        "profit/loss":"Profit/Loss"
+    }
+
+    # Also useful for labeling, titling, etc.
+    reverse_labels = {val:key for key, val in label_dict.items()}
+
     
     # Give the option to add data
     st.subheader(":violet[Add your own data?:]")
