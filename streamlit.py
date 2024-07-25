@@ -148,9 +148,9 @@ $$
         "gir": "Greens in Regulation",
         "penalty/ob": "Penalties / OB per Round",
         "handicap":"Handicap Index",
-        "birdies":"Birdies",
-        "dbl_bogeys_plus":"Double Bogey or Worse",
-        "profit/loss":"Profit/Loss"
+        # "birdies":"Birdies",
+        # "dbl_bogeys_plus":"Double Bogey or Worse",
+        # "profit/loss":"Profit/Loss"
     }
     
     # Also useful for labeling, titling, etc.
