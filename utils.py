@@ -98,7 +98,7 @@ def generate_data(data:pd.DataFrame, player_list:list=["Pete", "Dave", "Eric"], 
         avg_penalities = np.random.randint(low=0, high=10)
         avg_birdies = np.random.randint(low=0, high=2)
         avg_dbl_plus = np.random.randint(low=0, high=3)
-        avg_profit_loss = np.random.choice([*np.arange(-5, 5.5, .5)])
+        avg_profit_loss = np.random.choice([*np.arange(-1, 1.5, .5)])
         
         for i in range(100):
             name = n
@@ -129,7 +129,7 @@ def generate_data(data:pd.DataFrame, player_list:list=["Pete", "Dave", "Eric"], 
             penalties = int(max(np.random.normal(loc=avg_penalities, scale = 2, size = 1),0))
             birdies = int(max(np.random.normal(loc=avg_birdies, scale = 1, size = 1),0))
             dbl_bogeys = int(max(np.random.normal(loc=avg_dbl_plus, scale = 1, size = 1),0))
-            profit_loss = round(float(np.random.normal(loc=avg_profit_loss, scale = 1, size = 1)) * 2) / 2 
+            profit_loss = round(float(np.random.normal(loc=avg_profit_loss, scale = 2, size = 1)) * 2) / 2 
         
             # Call function and add to the df
             data.loc[len(data)] = add_round(name=name, date=date, adj_gross_score=adj_gross_score, course_rating=course_rating, 
@@ -571,7 +571,7 @@ def find_round(data:pd.DataFrame, name:str, date:pd.Timestamp='2024-07-22'):
         "profit/loss":"Profit/Loss"
     }
     
-    features = ["putts", "3_putts", "fairways_hit", "gir", "penalty/ob", "adj_gross_score"]
+    features = ["putts", "3_putts", "fairways_hit", "gir", "penalty/ob", "birdies", "dbl_bogeys_plus", "adj_gross_score", "profit/loss"]
     color_list = px.colors.qualitative.Bold
 
     fig = go.Figure()
