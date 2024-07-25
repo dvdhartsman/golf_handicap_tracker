@@ -6,6 +6,8 @@ import plotly.figure_factory as ff
 import streamlit as st
 from utils import add_round, get_handicaps, fill_handicaps, plot_statistics, histplot, pie_chart, dist_plot, rolling_avg, scatter, mean_med_stats, find_round
 
+from streamlit_option_menu import option_menu
+
 def main():
 
     # Config page layout
@@ -80,9 +82,27 @@ $$
     st.markdown("You can isolate a plot component by double-clicking on it in the legend, or you can toggle on/off individual plot items by clicking on the desired item in the legend. You can also click and drag over quadrants of graphs to zoom in on areas of interest. Click the home icon in the upper-right corner or double-click on the plot to zoom back out to the original scope. Finally, as you move your mouse cursor over the plots, you will notice hover-values that display additional information. Thank you and enjoy the dashboard")
     
     st.markdown("---")
+
     
-    # Data load
-    df = pd.read_csv("synthetic_data.csv", parse_dates=["date"]).sort_values(by="date")
+# --------------------------------------------------------------Visualizations------------------------------------------------------------
+    
+    # Tabs for data sources
+    selected = option_menu(
+        menu_title=None,
+        options=['Fake Data', 'Real Data'],
+        icons=['bar-chart-fill', 'person-fill'],  # 'bar-chart-fill', 'person-fill'
+        orientation='horizontal',
+    )
+
+    # Change data source depending on tab selection
+    if selected == "Fake Data":
+        # Data load
+        df = pd.read_csv("synthetic_data.csv", parse_dates=["date"]).sort_values(by="date")
+    elif selected == "Real Data":
+        st.subheader(":red[We are still collecting data currently, please bear with us.]")
+        st.write('Switch back to the "Fake Data" tab to see all of the available visualizations')
+        st.stop()
+        
 
     # Useful for labels, titles of plots
     label_dict = {

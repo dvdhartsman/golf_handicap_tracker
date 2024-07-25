@@ -8,7 +8,9 @@ import plotly.figure_factory as ff
 
 
 def add_round(name:str, date:str, adj_gross_score:int, course_rating:np.number, slope_rating:np.number, \
-              putts:int, three_putts:int, fairways:int, gir:int, penalties:int, data:pd.DataFrame) -> pd.Series:
+              putts:int=np.nan, three_putts:int=np.nan, fairways:int=np.nan, gir:int=np.nan, penalties:int=np.nan, birdies:int=np.nan, dbl_bogeys_plus:int=np.nan, profit_loss:float=np.nan, calc_diff:bool=True) -> pd.Series:
+
+    
     
     """ Given specified input data, a new row will be added to the dataframe
 
@@ -24,10 +26,12 @@ def add_round(name:str, date:str, adj_gross_score:int, course_rating:np.number, 
     fairways:int | options if recorded, the total number of fairways hit on par 4's and par 5's
     gir:int | optional greens in regulation, the total number of gir on all 18 holes
     penalties:int | optional total number of instances of out-of-bounds shots or water penalties
-    df:pd.DataFrame | original container of data
 
-
+    Returns:
+    ------------------
+    row:pd.Series | row of data for a new round
     """
+    
     row = {
         "name":name,
         "date":pd.to_datetime(date).normalize(),
@@ -38,14 +42,32 @@ def add_round(name:str, date:str, adj_gross_score:int, course_rating:np.number, 
         "3_putts": three_putts, 
         "fairways_hit": fairways,
         "gir": gir, 
-        "penalty/ob": penalties
-    }
+        "penalty/ob": penalties,
+        "birdies":birdies,
+        "dbl_bogeys_plus":dbl_bogeys_plus,
+        "profit/loss":profit_loss
+        }
 
-    row["handicap_diff"] = ((row["adj_gross_score"] - row["course_rating"]) * 113) / row["slope_rating"]
+    if calc_diff:
+        row["handicap_diff"] = ((row["adj_gross_score"] - row["course_rating"]) * 113) / row["slope_rating"]
     
-    data.loc[len(data)] = row
-    
-    return data
+    return row
+
+
+# Perform handicap diff calculation on whole dataframe
+def handicap_differentials(data:pd.DataFrame) -> pd.Series:
+    """
+    apply the handicap differential calculation for each round of golf entered
+
+    Args:
+    -------------
+    data:pd.DataFrame | source of data
+
+    Returns:
+    -------------
+    pd.Series | series of handicap differential values
+    """
+    return ((data["adj_gross_score"] - data["course_rating"]) * 113) / data["slope_rating"]
 
 
 # Loop to create fake data
@@ -103,9 +125,25 @@ def generate_data(data:pd.DataFrame, player_list:list=["Pete", "Dave", "Eric"], 
             penalties = int(max(np.random.normal(loc=avg_penalities, scale = 2, size = 1),0))
         
             # Call function and add to the df
-            add_round(name=name, date=date, adj_gross_score=adj_gross_score, course_rating=course_rating, 
+            data.loc[len(data)] = add_round(name=name, date=date, adj_gross_score=adj_gross_score, course_rating=course_rating, 
                       slope_rating=slope_rating, putts=putts, three_putts=three_putts, fairways=fairways, gir=gir, 
-                      penalties=penalties, data=data)
+                      penalties=penalties, calc_diff=False)  # calc_diff = False to save on computational resources by performing vector op
+
+
+def handicap_differentials(data:pd.DataFrame) -> pd.Series:
+    """
+    apply the handicap differential calculation for each round of golf entered
+
+    Args:
+    -------------
+    data:pd.DataFrame | source of data
+
+    Returns:
+    -------------
+    pd.Series | series of handicap differential values
+    """
+    return ((data["adj_gross_score"] - data["course_rating"]) * 113) / data["slope_rating"]
+
 
 
 def get_handicaps(data:pd.DataFrame):
