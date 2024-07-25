@@ -131,7 +131,7 @@ def generate_data(data:pd.DataFrame, player_list:list=["Pete", "Dave", "Eric"], 
             penalties = int(max(np.random.normal(loc=avg_penalities, scale = 2, size = 1),0))
             birdies = int(max(np.random.normal(loc=avg_birdies, scale = 1, size = 1),0))
             dbl_bogeys = int(max(np.random.normal(loc=avg_birdies, scale = 1, size = 1),0))
-            profit_loss = round(max(np.random.normal(loc=avg_birdies, scale = 1, size = 1),0) * 2) / 2 
+            profit_loss = round(max(float(np.random.normal(loc=avg_birdies, scale = 1, size = 1)), 0) * 2) / 2 
         
             # Call function and add to the df
             data.loc[len(data)] = add_round(name=name, date=date, adj_gross_score=adj_gross_score, course_rating=course_rating, 
