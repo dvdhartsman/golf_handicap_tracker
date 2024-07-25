@@ -5,6 +5,7 @@ import seaborn as sns
 import plotly.express as px
 import plotly.graph_objects as go
 import plotly.figure_factory as ff
+import streamlit as st
 
 
 def add_round(name:str, date:str, adj_gross_score:int, course_rating:np.number, slope_rating:np.number, \
@@ -567,7 +568,7 @@ def find_round(data:pd.DataFrame, name:str, date:pd.Timestamp='2024-07-22'):
         "penalty/ob": "Penalties/OB",
         "handicap":"Handicap Index",
         "birdies":"Birdies",
-        "dbl_bogeys_plus":"Double Bogey or Worse",
+        "dbl_bogeys_plus":"Double or Worse",
         "profit/loss":"Profit/Loss"
     }
     
@@ -600,3 +601,32 @@ def find_round(data:pd.DataFrame, name:str, date:pd.Timestamp='2024-07-22'):
         )
     
         return fig
+
+
+def total_profit(data:pd.DataFrame, color_map:dict={"Dave":'#636EFA', "Pete":'#EF553B', "Eric":'#00CC96'}):
+    """
+    Display the total +/- for a player's records in the data
+
+    Args:
+    ----------------
+    data:pd.DataFrame | source of data
+    color_map:dict | color mapping for consistency across plots
+
+    Returns:
+    fig.plotly.express.Figure | bar plot showing total profit/loss
+    """
+    
+    fig = px.bar(data_frame = data.groupby("name")["profit/loss"].sum().reset_index(), x="name", y="profit/loss", color="name", color_discrete_map=color_map,
+                 title = "Total Profit/Loss for Each Player", hover_name="name", labels={"profit/loss":"Profit/Loss", "name":"Player Name"},
+                 hover_data={"name":False})
+
+    return fig
+
+def explanation_of_plots():
+    """
+    Text explaining plotly functunality
+    """
+    st.markdown("---")
+    st.markdown(":blue[_A brief note about the plots:_]")
+    st.markdown("You can isolate a plot component by double-clicking on it in the legend, or you can toggle on/off individual plot items by clicking on the desired item in the legend. You can also click and drag over quadrants of graphs to zoom in on areas of interest. Click the home icon in the upper-right corner or double-click on the plot to zoom back out to the original scope. Finally, as you move your mouse cursor over the plots, you will notice hover-values that display additional information. Thank you and enjoy the dashboard")
+    st.markdown("---")
