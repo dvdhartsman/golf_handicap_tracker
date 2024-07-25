@@ -292,8 +292,8 @@ $$
     if query_df.empty:
         st.subheader(":red[No records found for this date]")
     
-    if not query_df.empty:
-        st.dataframe(query_df[["name"]+[key for key in label_dict.keys() if key not in ['birdies', 'dbl_bogeys_plus', ### EDIT LATER ### 'profit/loss']]].rename(columns=label_dict).rename(columns={"name":"Player"})\
+    if not query_df.empty:         #### Edit Later #### 
+        st.dataframe(query_df[["name"]+[key for key in label_dict.keys() if key not in ['birdies', 'dbl_bogeys_plus', 'profit/loss']]].rename(columns=label_dict).rename(columns={"name":"Player"})\
                      .drop(columns="Handicap Index"), hide_index=True, use_container_width=True)
         for name in query_df["name"].unique():
             st.plotly_chart(find_round(query_df, name, pd.to_datetime(round_date, format='YYYY-MM-dd')))
