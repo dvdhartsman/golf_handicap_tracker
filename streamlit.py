@@ -49,7 +49,7 @@ def main():
             st.session_state.df = pd.read_csv("synthetic_data.csv", parse_dates=["date"])        
     
         st.subheader(":blue[While my friends and I collect some data...]")
-        st.markdown("""I have generated some synthetic data to demonstrate the visualizations we will use to track and analyze our scores. This data is purely for purposes of demonstration, and some of the statistics and relationships shown will likely not reflect reality for most golfers. \n \nThat being said, I am still the best golfer based on synthetic data......""")
+        st.markdown("""I have generated some synthetic data to demonstrate the visualizations we will use to track and analyze our scores. This data is purely for purposes of demonstration, and some of the statistics and relationships shown will likely not reflect reality for most golfers. """)
         explanation_of_plots()
 
         fake_data()

@@ -598,8 +598,11 @@ def find_round(data:pd.DataFrame, name:str, date:pd.Timestamp='2024-07-22'):
                 marker={"color":color_list[idx]}
             ))
 
+        m_format = player_data["match_format"].iloc[0]
+        
         fig.update_layout(
-        title=f"Golf Round Data for {name} on {date.date()}",
+        title=f"Golf Round Data for {name} on {date.date()} <br><sup>- {str(m_format)}</sup>" if m_format != None else 
+            f"Golf Round Data for {name} on {date.date()}<br><sup>(No format listed)</sup>",
         xaxis_title="Features",
         yaxis_title="Values",
         barmode='group',
@@ -630,6 +633,35 @@ def total_profit(data:pd.DataFrame, color_map:dict={"Dave":'#636EFA', "Pete":'#E
                  labels={"profit/loss":"Profit/Loss", "name":"Player Name"}, hover_data={"name":False})
 
     return fig
+
+
+def profit_by_match_type(data:pd.DataFrame, aggfunc:str):
+    """
+    Display the PnL by match format
+
+    Args:
+    ---------------
+    data:pd.DataFrame | source of data
+    aggfunc:str | string, one of ["mean", "median", "sum"]
+
+    Returns:
+    ----------------
+    fig:plotly.express.figure | bar plot showing PnL by category per player
+    """
+
+    label_dict = {
+        "mean":"Average",
+        "median":"50th Percentile",
+        "sum":"Total"
+    }
+    
+    fig = px.bar(data_frame = data.groupby(["name", "match_format"])["profit/loss"].agg([aggfunc]).reset_index(), x="name",
+                y=aggfunc, color="match_format", barmode="group", hover_name = "name", hover_data={"name":False},
+                labels={"match_format":"Match Format", "name":"Player Name", aggfunc:f"{label_dict[aggfunc]} Profit/Loss"},
+                title = f"{label_dict[aggfunc]} Profit/Loss by Match Format")
+    
+    return fig
+
 
         
 def explanation_of_plots():

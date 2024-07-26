@@ -4,7 +4,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 import plotly.figure_factory as ff
 import streamlit as st
-from utils import add_round, get_handicaps, fill_handicaps, plot_statistics, histplot, pie_chart, dist_plot, rolling_avg, scatter, mean_med_stats, find_round, handicap_differentials, total_profit
+from utils import add_round, get_handicaps, fill_handicaps, plot_statistics, histplot, pie_chart, dist_plot, rolling_avg, scatter, mean_med_stats, find_round, handicap_differentials, total_profit, profit_by_match_type
 
 
 def real_data():
@@ -30,7 +30,8 @@ def real_data():
         "handicap":"Handicap Index",
         "birdies":"Birdies",
         "dbl_bogeys_plus":"Double or Worse",
-        "profit/loss":"Profit/Loss"
+        "profit/loss":"Profit/Loss",
+        "match_format":"Match Format"
     }
 
     # Also useful for labeling, titling, etc.
@@ -99,11 +100,23 @@ def real_data():
 
     st.subheader(":violet[The only reason we play, Profit and Loss:]")
     st.plotly_chart(total_profit(df, color_map=color_map))
+
+    agg_dict = {
+        "mean":"Average Profit/Loss",
+        "median":"Median Profit/Loss",
+        "sum":"Total Profit/Loss"
+    }
+
+    agg_dict_rev = {val:key for key, val in agg_dict.items()}
+    
+    agg_func = st.selectbox("Profit and Loss by Match Format: How would you like to Aggregate?", [*agg_dict_rev.keys()])
+    st.plotly_chart(profit_by_match_type(df, agg_dict_rev[agg_func]))
+    
     
     # Trends, line plots
     st.subheader(":violet[Trends Over Time:]")
     st.write("Use the dropdown menu to select a metric and the date slider to select a range of dates")
-    trend_var = st.selectbox("Trend Metric:", [*reverse_labels.keys()], index=7)
+    trend_var = st.selectbox("Trend Metric:", [key for key in reverse_labels.keys() if key != "Match Format"], index=7)
     trend_data = df.dropna(subset=reverse_labels[trend_var])
 
     # Set up min and max dates
@@ -120,20 +133,20 @@ def real_data():
     # Rolling averages to evaluate smoothed trends
     st.subheader(":violet[Rolling average statistics:]")
     st.write("Use the dropdown menu to select a metric and the slider to select the size of your window")
-    roll_var = st.selectbox("Rolling Average Metric:", [*reverse_labels.keys()], index=0)
+    roll_var = st.selectbox("Rolling Average Metric:", [key for key in reverse_labels.keys() if key != "Match Format"], index=0)
     window = st.slider("Number of Rounds to Include in the Rolling Window:", min_value=5, max_value = 30) 
     st.plotly_chart(rolling_avg(df, reverse_labels[roll_var], window, color_map=color_map))
 
     # Mean, median, stddev aggregate stats for different metrics
     st.subheader(":violet[Average, median, and standard deviation aggregate statistics:]")
     st.write("Use the dropdown menu to select a metric")
-    agg_var = st.selectbox("Aggregate Metric:", [*reverse_labels.keys()], index=0)
+    agg_var = st.selectbox("Aggregate Metric:", [key for key in reverse_labels.keys() if key != "Match Format"], index=0)
     st.plotly_chart(mean_med_stats(df, reverse_labels[agg_var]))
 
     # Distribution plots for various metrics
     st.subheader(":violet[Distributions: Comparing distributions of different statistics across players:]")
     st.write("Use the dropdown menu to select a metric")
-    hist_var = st.selectbox("Distribution Metric:", [*reverse_labels.keys()], index=0)
+    hist_var = st.selectbox("Distribution Metric:", [key for key in reverse_labels.keys() if key != "Match Format"], index=0)
     st.plotly_chart(histplot(df, reverse_labels[hist_var], color_map=color_map))
 
     # Proportion pie charts
@@ -141,7 +154,7 @@ def real_data():
     st.write("Use the dropdown menu to select a metric")
 
     pie_var = st.selectbox("Proportion Metric:", [key for key in reverse_labels.keys() if key not in \
-                                                  ["Adjusted Gross Score", "Handicap Differential", "Handicap Index"]], index=1)
+                                                  ["Adjusted Gross Score", "Handicap Differential", "Handicap Index", "Match Format"]], index=1)
     cols = st.columns([1 for i in names])
     for idx, name in enumerate(names):
         with cols[idx]:
@@ -153,10 +166,10 @@ def real_data():
     st.write("Use the first dropdown menu to select a metric for the X-Axis and the second dropdown to optionally add a 'size' metric")
     
     scatter_var = st.selectbox("X-Variable:", [key for key in reverse_labels.keys() if key not in \
-                                                  ["Adjusted Gross Score", "Handicap Differential", "Handicap Index"]], index=0)
+                                                  ["Adjusted Gross Score", "Handicap Differential", "Handicap Index", "Match Format"]], index=0)
     
     size_var = st.selectbox("Size-Variable (Optional):", [None] + [key for key in reverse_labels.keys() if key not in \
-                                                  ["Adjusted Gross Score", "Handicap Differential", "Handicap Index"]], index=0)
+                                                  ["Adjusted Gross Score", "Handicap Differential", "Handicap Index", "Match Format"]], index=0)
     
     
     st.plotly_chart(scatter(data=df, column=reverse_labels[scatter_var], size=reverse_labels[size_var] if size_var else None, color_map=color_map)) 
