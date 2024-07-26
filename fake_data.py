@@ -91,7 +91,7 @@ def fake_data():
         button_click()
 
     if st.session_state.button_clicked:
-        st.dataframe(st.session_state.df.loc[st.session_state.df["name"] == rd_name].drop(columns="jittered_col"), hide_index=False,
+        st.dataframe(st.session_state.df.loc[st.session_state.df["name"] == rd_name].drop(columns="jittered_col"), hide_index=True,
                      use_container_width=True)
 
 
