@@ -375,7 +375,7 @@ def dist_plot(data:pd.DataFrame, column:str):
     # Create the overlaid plot
     fig = go.Figure()
 
-    colors = ["blue", "red", "green", "orange"]
+    colors = px.colors.qualitative.Vivid
     
     for i, player in enumerate(data["name"].unique()):
         player_data = data.loc[data["name"]== player][column]
@@ -625,9 +625,9 @@ def total_profit(data:pd.DataFrame, color_map:dict={"Dave":'#636EFA', "Pete":'#E
     fig.plotly.express.Figure | bar plot showing total profit/loss
     """
     
-    fig = px.bar(data_frame = data.groupby("name")["profit/loss"].sum().reset_index(), x="name", y="profit/loss", color="name", color_discrete_map=color_map,
-                 title = "Total Profit/Loss for Each Player", hover_name="name", labels={"profit/loss":"Profit/Loss", "name":"Player Name"},
-                 hover_data={"name":False})
+    fig = px.bar(data_frame = data.groupby("name")["profit/loss"].sum().reset_index(), x="name", y="profit/loss", color="name", 
+                 color_discrete_map=color_map, title = "Total Profit/Loss for Each Player", hover_name="name", 
+                 labels={"profit/loss":"Profit/Loss", "name":"Player Name"}, hover_data={"name":False})
 
     return fig
 
