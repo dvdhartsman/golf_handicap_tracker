@@ -5,11 +5,11 @@ import seaborn as sns
 import plotly.express as px
 import plotly.graph_objects as go
 import plotly.figure_factory as ff
-import streamlit as st
 
 
-def add_round(name:str, date:str, adj_gross_score:int, course_rating:np.number, slope_rating:np.number, \
-              putts:int=np.nan, three_putts:int=np.nan, fairways:int=np.nan, gir:int=np.nan, penalties:int=np.nan, birdies:int=np.nan, dbl_bogeys_plus:int=np.nan, profit_loss:float=np.nan, calc_diff:bool=True) -> pd.Series:
+def add_round(name:str, date:str, adj_gross_score:int, course_rating:np.number, slope_rating:np.number,
+              putts:int=np.nan, three_putts:int=np.nan, fairways:int=np.nan, gir:int=np.nan, penalties:int=np.nan, birdies:int=np.nan,
+              dbl_bogeys_plus:int=np.nan, profit_loss:float=np.nan, calc_diff:bool=True) -> pd.Series:
 
     
     
@@ -626,6 +626,9 @@ def explanation_of_plots():
     """
     Text explaining plotly functunality
     """
+
+    import streamlit as st
+    
     st.markdown("---")
     st.markdown(":blue[_A brief note about the plots:_]")
     st.markdown("You can isolate a plot component by double-clicking on it in the legend, or you can toggle on/off individual plot items by clicking on the desired item in the legend. You can also click and drag over quadrants of graphs to zoom in on areas of interest. Click the home icon in the upper-right corner or double-click on the plot to zoom back out to the original scope. Finally, as you move your mouse cursor over the plots, you will notice hover-values that display additional information. Thank you and enjoy the dashboard")
