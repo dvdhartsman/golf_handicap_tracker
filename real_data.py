@@ -167,7 +167,7 @@ def real_data():
     
     corr = df[["adj_gross_score", reverse_labels[scatter_var]]].corr().iloc[0,1]
     
-    st.write(f'Overall Pearson Correlation for :blue[_Adjusted Gross Score and {scatter_var}_]: :green[**{corr:.3f}**]')
+    st.write(f'Overall Pearson Correlation for :blue[_Adjusted Gross Score_] and :blue[{scatter_var}_]: :green[**{corr:.3f}**]')
 
     # Boilerplate analysis options
     if abs(corr) <.3:

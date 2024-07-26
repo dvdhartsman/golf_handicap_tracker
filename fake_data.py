@@ -204,12 +204,31 @@ def fake_data():
     st.subheader(":violet[Proportions of contributing statistics:]")
     st.write("Use the dropdown menu to select a metric")
 
-    pie_var = st.selectbox("Proportion Metric:", [key for key in reverse_labels.keys() if key not in \
-                                                  ["Adjusted Gross Score", "Handicap Differential", "Handicap Index"]], index=1)
-    cols = st.columns([1 for i in names])
-    for idx, name in enumerate(names):
-        with cols[idx]:
-            st.plotly_chart(pie_chart(st.session_state.df, reverse_labels[pie_var], name))
+    pie_var = st.selectbox("Proportion Metric:", [key for key in reverse_labels.keys() if key not in 
+                                                  ["Adjusted Gross Score", "Handicap Differential", "Handicap Index", "Profit/Loss"]], index=1)
+    
+    
+    names_list = st.session_state.df.dropna(subset=reverse_labels[pie_var])["name"].unique()
+    col1, col2, col3 = st.columns(3)
+    
+    # Create a column for each player with their most up-to-date handicap
+    for idx, name in enumerate(names_list):
+        if idx % 3 == 0:
+            with col1:
+                
+                st.plotly_chart(pie_chart(st.session_state.df, reverse_labels[pie_var], name))
+                st.markdown("---")
+                
+        elif idx % 3 == 1:
+            with col2:
+                st.plotly_chart(pie_chart(st.session_state.df, reverse_labels[pie_var], name))
+                st.markdown("---")
+                
+
+        else:
+            with col3:
+                st.plotly_chart(pie_chart(st.session_state.df, reverse_labels[pie_var], name))
+                st.markdown("---")
 
 
     # Scatter plots of adj_gross_score vs other numeric variables with size option
@@ -231,7 +250,7 @@ def fake_data():
     
     corr = st.session_state.df[["adj_gross_score", reverse_labels[scatter_var]]].corr().iloc[0,1]
     
-    st.write(f'Overall Pearson Correlation for :blue[_Adjusted Gross Score and {scatter_var}_]: :green[**{corr:.3f}**]')
+    st.write(f'Overall Pearson Correlation for :blue[_Adjusted Gross Score_] and :blue[_{scatter_var}_]: :green[**{corr:.3f}**]')
 
     # Boilerplate analysis options
     if abs(corr) <.3:

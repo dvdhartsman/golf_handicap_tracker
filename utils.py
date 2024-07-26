@@ -9,7 +9,7 @@ import plotly.figure_factory as ff
 
 def add_round(name:str, date:str, adj_gross_score:int, course_rating:np.number, slope_rating:np.number,
               putts:int=np.nan, three_putts:int=np.nan, fairways:int=np.nan, gir:int=np.nan, penalties:int=np.nan, birdies:int=np.nan,
-              dbl_bogeys_plus:int=np.nan, profit_loss:float=np.nan, calc_diff:bool=True) -> pd.Series:
+              dbl_bogeys_plus:int=np.nan, profit_loss:float=np.nan, match_format:str=None, calc_diff:bool=True) -> pd.Series:
 
     
     
@@ -46,7 +46,8 @@ def add_round(name:str, date:str, adj_gross_score:int, course_rating:np.number, 
         "penalty/ob": penalties,
         "birdies":birdies,
         "dbl_bogeys_plus":dbl_bogeys_plus,
-        "profit/loss":profit_loss
+        "profit/loss":profit_loss,
+        "match_format":match_format
         }
 
     if calc_diff:
@@ -72,7 +73,7 @@ def handicap_differentials(data:pd.DataFrame) -> pd.Series:
 
 
 # Loop to create fake data
-def generate_data(data:pd.DataFrame, player_list:list=["Pete", "Dave", "Eric"], start_date:pd.Timestamp=pd.Timestamp.today()):
+def generate_data(data:pd.DataFrame, player_list:list=["Pete", "Dave", "Eric", "Fred", "Doc"], start_date:pd.Timestamp=pd.Timestamp.today()):
     """
     Create synthetic data for demonstration purposes and add it to data in place
     
@@ -131,12 +132,13 @@ def generate_data(data:pd.DataFrame, player_list:list=["Pete", "Dave", "Eric"], 
             birdies = int(max(np.random.normal(loc=avg_birdies, scale = 1, size = 1),0))
             dbl_bogeys = int(max(np.random.normal(loc=avg_dbl_plus, scale = 1, size = 1),0))
             profit_loss = round(float(np.random.normal(loc=avg_profit_loss, scale = 2, size = 1)) * 2) / 2 
+            match_format = np.random.choice(["Skins", "Match Play", "Stroke Play", "Dots"])
         
             # Call function and add to the df
             data.loc[len(data)] = add_round(name=name, date=date, adj_gross_score=adj_gross_score, course_rating=course_rating, 
                                             slope_rating=slope_rating, putts=putts,
                                             three_putts=three_putts, fairways=fairways, gir=gir, penalties=penalties, birdies=birdies, 
-                                            dbl_bogeys_plus=dbl_bogeys, profit_loss=profit_loss,
+                                            dbl_bogeys_plus=dbl_bogeys, profit_loss=profit_loss, match_format=match_format,
                                             calc_diff=False)  
             # calc_diff = False to save on computational resources by performing vector op
 
@@ -249,7 +251,8 @@ def plot_statistics(data, column, color_map:dict = {"Dave":'#636EFA', "Pete":'#E
         "handicap":"Handicap Index",
         "birdies":"Birdies",
         "dbl_bogeys_plus":"Double Bogey or Worse",
-        "profit/loss":"Profit/Loss"
+        "profit/loss":"Profit/Loss",
+        "match_format":"Match Format"
     }
         
     # if len(data.dropna(subset=column)["date"].unique()) < 50:
@@ -296,7 +299,8 @@ def histplot(data:pd.DataFrame, column:str, color_map:dict = {"Dave":'#636EFA', 
         "handicap":"Handicap Index",
         "birdies":"Birdies",
         "dbl_bogeys_plus":"Double Bogey or Worse",
-        "profit/loss":"Profit/Loss"
+        "profit/loss":"Profit/Loss",
+        "match_format":"Match Format"
     }
     
     fig_h = px.histogram(data, x=column, nbins=len(data[column].unique()), \
@@ -337,14 +341,15 @@ def pie_chart(data:pd.DataFrame, column:str, player:str=None):
         "handicap":"Handicap Index",
         "birdies":"Birdies",
         "dbl_bogeys_plus":"Double Bogey or Worse",
-        "profit/loss":"Profit/Loss"
+        "profit/loss":"Profit/Loss",
+        "match_format":"Match Format"
     }
     
     if player:
         data = data.loc[data["name"] == player]
 
     fig = px.pie(data_frame=data, names=column, hole=.5, labels={column:label_dict[column]},
-                title=f"Proportion of {label_dict[column]}", category_orders={column:[*range(data[column].max().astype(int))]})
+                title=f"{player}'s Proportion of {label_dict[column]}", category_orders={column:[*range(data[column].max().astype(int))]})
     fig.update_layout(legend={"title":player if player else label_dict[column]})
     
     return fig
@@ -424,7 +429,8 @@ def mean_med_stats(data:pd.DataFrame, column:str, color_map:dict={"Dave":'#636EF
         "handicap":"Handicap Index",
         "birdies":"Birdies",
         "dbl_bogeys_plus":"Double Bogey or Worse",
-        "profit/loss":"Profit/Loss"
+        "profit/loss":"Profit/Loss",
+        "match_format":"Match Format"
     }
     
     # Grouping data by state and calculating median and mean
@@ -482,7 +488,8 @@ def rolling_avg(data:pd.DataFrame, column:str, window:int, color_map:dict={"Dave
         "handicap":"Handicap Index",
         "birdies":"Birdies",
         "dbl_bogeys_plus":"Double Bogey or Worse",
-        "profit/loss":"Profit/Loss"
+        "profit/loss":"Profit/Loss",
+        "match_format":"Match Format"
     }
 
     data = data.set_index("date").sort_index()
@@ -524,7 +531,8 @@ def scatter(data:pd.DataFrame, column:str, color_map:dict={"Dave":'#636EFA', "Pe
         "handicap":"Handicap Index",
         "birdies":"Birdies",
         "dbl_bogeys_plus":"Double Bogey or Worse",
-        "profit/loss":"Profit/Loss"
+        "profit/loss":"Profit/Loss",
+        "match_format":"Match Format"
     }
 
     if size:
@@ -569,7 +577,8 @@ def find_round(data:pd.DataFrame, name:str, date:pd.Timestamp='2024-07-22'):
         "handicap":"Handicap Index",
         "birdies":"Birdies",
         "dbl_bogeys_plus":"Double or Worse",
-        "profit/loss":"Profit/Loss"
+        "profit/loss":"Profit/Loss",
+        "match_format":"Match Format"
     }
     
     features = ["putts", "3_putts", "fairways_hit", "gir", "penalty/ob", "birdies", "dbl_bogeys_plus", "adj_gross_score", "profit/loss"]
@@ -622,6 +631,7 @@ def total_profit(data:pd.DataFrame, color_map:dict={"Dave":'#636EFA', "Pete":'#E
 
     return fig
 
+        
 def explanation_of_plots():
     """
     Text explaining plotly functunality
