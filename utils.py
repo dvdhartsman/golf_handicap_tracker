@@ -163,7 +163,7 @@ def generate_data(data:pd.DataFrame, player_list:list=["Pete", "Dave", "Eric", "
                 gir = 0
             penalties = int(max(np.random.normal(loc=avg_penalities, scale = 2, size = 1),0))
             birdies = int(max(np.random.normal(loc=avg_birdies, scale = 1, size = 1),0))
-            trpl_bogeys = int(max(np.random.normal(loc=avg_dbl_plus, scale = 1, size = 1),0))
+            trpl_bogeys = int(max(np.random.normal(loc=avg_trpl_plus, scale = 1, size = 1),0))
             profit_loss = round(float(np.random.normal(loc=avg_profit_loss, scale = 2, size = 1)) * 2) / 2 
             match_format = np.random.choice(["Skins", "Match Play", "Stroke Play", "Dots"])
             golf_course = np.random.choice(["Augusta National", "Pebble Beach", "Bethpage Black", "Kiawah Island", "Whistling Straits",
