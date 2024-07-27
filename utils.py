@@ -18,7 +18,7 @@ label_dict = {
         "penalty/ob": "Penalties / OB per Round",
         "handicap":"Handicap Index",
         "birdies":"Birdies",
-        "dbl_bogeys_plus":"Double Bogey or Worse",
+        "trpl_bogeys_plus":"Triple Bogey+",
         "profit/loss":"Profit/Loss",
         "match_format":"Match Format",
         "golf_course":"Golf Course",
