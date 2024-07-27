@@ -279,30 +279,6 @@ def plot_statistics(data, column, color_map:dict = {"Dave":'#636EFA', "Pete":'#E
     ------------------
     fig: px.Figure | plotly figure of a lineplot
     """
-
-    # label_dict = {
-    #     "adj_gross_score":"Adjusted Gross Score", 
-    #     "handicap_diff": "Handicap Differential",
-    #     "putts": "Putts per Round",
-    #     "3_putts": "3-Putts per Round",
-    #     "fairways_hit": "Fairways Hit per Round",
-    #     "gir": "Greens in Regulation",
-    #     "penalty/ob": "Penalties / OB per Round",
-    #     "handicap":"Handicap Index",
-    #     "birdies":"Birdies",
-    #     "dbl_bogeys_plus":"Double Bogey or Worse",
-    #     "profit/loss":"Profit/Loss",
-    #     "match_format":"Match Format"
-    # }
-        
-    # if len(data.dropna(subset=column)["date"].unique()) < 50:
-    #     length = len(data.dropna(subset=column)["date"].unique()) 
-    # else:
-    #     length = 50
-
-    # date_cutoff = pd.Series(data.dropna(subset=column)["date"].unique()).sort_values().to_list()[-length]
-    
-    # .loc[data["date"] >= date_cutoff]
     
     fig = px.line(data_frame=data.dropna(subset=column),\
                   x="date", y=column, color="name", color_discrete_map=color_map, markers=True, hover_name="name",\
@@ -328,20 +304,6 @@ def histplot(data:pd.DataFrame, column:str, color_map:dict = {"Dave":'#636EFA', 
     fig:px.Figure | a histogram of the selected continuous variable
     """
 
-    label_dict = {
-        "adj_gross_score":"Adjusted Gross Score", 
-        "handicap_diff": "Handicap Differential",
-        "putts": "Putts per Round",
-        "3_putts": "3-Putts per Round",
-        "fairways_hit": "Fairways Hit per Round",
-        "gir": "Greens in Regulation",
-        "penalty/ob": "Penalties / OB per Round",
-        "handicap":"Handicap Index",
-        "birdies":"Birdies",
-        "dbl_bogeys_plus":"Double Bogey or Worse",
-        "profit/loss":"Profit/Loss",
-        "match_format":"Match Format"
-    }
     
     fig_h = px.histogram(data, x=column, nbins=len(data[column].unique()), \
                          labels={column:label_dict[column], "count":"Count"}, hover_name="name", color="name", hover_data={"name":True},
