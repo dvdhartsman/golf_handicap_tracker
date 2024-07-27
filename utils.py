@@ -7,7 +7,6 @@ import plotly.graph_objects as go
 import plotly.figure_factory as ff
 
 
-
 label_dict = {
         "adj_gross_score":"Adjusted Gross Score", 
         "handicap_diff": "Handicap Differential",
@@ -22,7 +21,7 @@ label_dict = {
         "profit/loss":"Profit/Loss",
         "match_format":"Match Format",
         "golf_course":"Golf Course",
-        "oppenent_s":"Opponent/s",
+        "opponent/s":"Opponent/s",
         "notes":"Notes"
     }
 
@@ -514,7 +513,7 @@ def find_round(data:pd.DataFrame, name:str, date:pd.Timestamp='2024-07-22'):
     """
 
     
-    features = ["putts", "3_putts", "fairways_hit", "gir", "penalty/ob", "birdies", "dbl_bogeys_plus", "adj_gross_score", "profit/loss"]
+    features = ["putts", "3_putts", "fairways_hit", "gir", "penalty/ob", "birdies", "trpl_bogeys_plus", "adj_gross_score", "profit/loss"]
     color_list = px.colors.qualitative.Bold
 
     fig = go.Figure()
@@ -532,10 +531,11 @@ def find_round(data:pd.DataFrame, name:str, date:pd.Timestamp='2024-07-22'):
             ))
 
         m_format = player_data["match_format"].iloc[0]
+        golf_course = player_data["golf_course"].iloc[0]
         
         fig.update_layout(
-        title=f"Golf Round Data for {name} on {date.date()} <br><sup>- {str(m_format)}</sup>" if m_format != None else 
-            f"Golf Round Data for {name} on {date.date()}<br><sup>(No format listed)</sup>",
+        title=f"Golf Round Data for {name} on {date.date()} <br><sup>{golf_course} - {m_format}</sup>" if m_format != None else 
+            f"Golf Round Data for {name} on {date.date()}<br><sup>{golf_course} (No format listed)</sup>",
         xaxis_title="Features",
         yaxis_title="Values",
         barmode='group',
@@ -568,6 +568,7 @@ def total_profit(data:pd.DataFrame, color_map:dict={"Dave":'#636EFA', "Pete":'#E
     return fig
 
 
+# -----------------------------------Make this more general for categorical and columnar selection ----------------------
 def profit_by_match_type(data:pd.DataFrame, aggfunc:str):
     """
     Display the PnL by match format

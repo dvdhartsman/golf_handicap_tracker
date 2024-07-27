@@ -58,7 +58,7 @@ def main():
 
 # -------------------------------------------------------------- Real Data ------------------------------------------------------------    
     elif selected == "Real Data":
-        df = pd.read_csv("real_data.csv")
+        df = pd.read_csv("real_data.csv", parse_dates=["date"])
         
         st.subheader(":red[We are still collecting data currently, please bear with us.]")
         st.write('Switch back to the "Fake Data" tab to see all of the available visualizations')

@@ -32,9 +32,12 @@ def fake_data():
         "penalty/ob": "Penalties / OB per Round",
         "handicap":"Handicap Index",
         "birdies":"Birdies",
-        "dbl_bogeys_plus":"Double or Worse",
+        "trpl_bogeys_plus":"Triple Bogey+",
         "profit/loss":"Profit/Loss",
-        "match_format":"Match Format"
+        "match_format":"Match Format",
+        "golf_course":"Golf Course",
+        "opponent/s":"Opponent/s",
+        "notes":"Notes"
     }
 
     # Also useful for labeling, titling, etc.
@@ -179,6 +182,7 @@ def fake_data():
     # Trends, line plots
     st.subheader(":violet[Trends Over Time:]")
     st.write("Use the dropdown menu to select a metric and the date slider to select a range of dates")
+    
     trend_var = st.selectbox("Trend Metric:", [key for key in reverse_labels.keys() if key != "Match Format"], index=7)
     trend_data = st.session_state.df.dropna(subset=reverse_labels[trend_var])
 

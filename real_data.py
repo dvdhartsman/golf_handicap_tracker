@@ -12,7 +12,7 @@ def real_data():
     display analysis for real data
     """
 
-    df = pd.read_csv("real_data.csv")
+    df = pd.read_csv("real_data.csv", parse_dates=["date"])
 
     # Colors for plots to avoid repeating colors
     color_map = dict(zip([name for name in df["name"].unique()], px.colors.qualitative.Vivid))
@@ -29,9 +29,12 @@ def real_data():
         "penalty/ob": "Penalties / OB per Round",
         "handicap":"Handicap Index",
         "birdies":"Birdies",
-        "dbl_bogeys_plus":"Double or Worse",
+        "trpl_bogeys_plus":"Triple Bogey+",
         "profit/loss":"Profit/Loss",
-        "match_format":"Match Format"
+        "match_format":"Match Format",
+        "golf_course":"Golf Course",
+        "opponent_s":"Opponent/s",
+        "notes":"Notes"
     }
 
     # Also useful for labeling, titling, etc.
@@ -115,13 +118,16 @@ def real_data():
     
     # Trends, line plots
     st.subheader(":violet[Trends Over Time:]")
+    
+    
     st.write("Use the dropdown menu to select a metric and the date slider to select a range of dates")
     trend_var = st.selectbox("Trend Metric:", [key for key in reverse_labels.keys() if key != "Match Format"], index=7)
     trend_data = df.dropna(subset=reverse_labels[trend_var])
 
     # Set up min and max dates
-    min_date = trend_data['date'].min().date()
-    max_date = trend_data['date'].max().date()
+    min_date = (trend_data['date'].min() - pd.Timedelta(days=1)).date()
+    max_date = (trend_data['date'].max() + pd.Timedelta(days=1)).date()
+    st.write(min_date, max_date)
     
     # Use st.date_input to select start and end dates
     start_date, end_date = st.slider("Date Range", min_value = min_date, max_value=max_date, \

@@ -1,1 +1,4 @@
-name,date,adj_gross_score,course_rating,slope_rating,handicap_diff,putts,3_putts,fairways_hit,gir,penalty/ob,birdies,dbl_bogeys_plus,profit/loss
+name,date,adj_gross_score,course_rating,slope_rating,handicap_diff,putts,3_putts,fairways_hit,gir,penalty/ob,birdies,trpl_bogeys_plus,profit/loss,match_format,golf_course,opponent/s,notes,handicap
+Pete,2024-07-26,101,71.9,134,24.539552238805964,31,0,0,1,5,0,4,-11,Skins | Dots,Hollybrook,Dave,"Pete had difficulty managing the heat, sweat, and grip conditions. Long game bad, short game pretty good.",
+Dave,2024-07-26,87,71.9,134,12.733582089552234,34,2,1,6,0,1,0,11,Skins | Dots,Hollybrook,Pete,"Struggled to handle tee shots with left -> right wind, I'd have more 3-putts if we counted putting from the fringe, 
+short game was poor, one very poor tee shot with 4-iron when I tried to hover the club",
