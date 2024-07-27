@@ -332,20 +332,6 @@ def pie_chart(data:pd.DataFrame, column:str, player:str=None):
     fig:px.Figure() | a pie chart with a hole in the middle displaying the proportions of values
     """
 
-    label_dict = {
-        "adj_gross_score":"Adjusted Gross Score", 
-        "handicap_diff": "Handicap Differential",
-        "putts": "Putts per Round",
-        "3_putts": "3-Putts per Round",
-        "fairways_hit": "Fairways Hit per Round",
-        "gir": "Greens in Regulation",
-        "penalty/ob": "Penalties / OB per Round",
-        "handicap":"Handicap Index",
-        "birdies":"Birdies",
-        "dbl_bogeys_plus":"Double Bogey or Worse",
-        "profit/loss":"Profit/Loss",
-        "match_format":"Match Format"
-    }
     
     if player:
         data = data.loc[data["name"] == player]
@@ -420,20 +406,6 @@ def mean_med_stats(data:pd.DataFrame, column:str, color_map:dict={"Dave":'#636EF
     KeyError if data do not contain the correct columns
     """
 
-    label_dict = {
-        "adj_gross_score":"Adjusted Gross Score", 
-        "handicap_diff": "Handicap Differential",
-        "putts": "Putts per Round",
-        "3_putts": "3-Putts per Round",
-        "fairways_hit": "Fairways Hit per Round",
-        "gir": "Greens in Regulation",
-        "penalty/ob": "Penalties / OB per Round",
-        "handicap":"Handicap Index",
-        "birdies":"Birdies",
-        "dbl_bogeys_plus":"Double Bogey or Worse",
-        "profit/loss":"Profit/Loss",
-        "match_format":"Match Format"
-    }
     
     # Grouping data by state and calculating median and mean
     grouped = data.groupby("name")[column].agg(["median", "mean","std"]).sort_values(by="median", ascending=False)
@@ -479,20 +451,6 @@ def rolling_avg(data:pd.DataFrame, column:str, window:int, color_map:dict={"Dave
     KeyError if data do not contain the correct columns
     """
 
-    label_dict = {
-        "adj_gross_score":"Adjusted Gross Score", 
-        "handicap_diff": "Handicap Differential",
-        "putts": "Putts per Round",
-        "3_putts": "3-Putts per Round",
-        "fairways_hit": "Fairways Hit per Round",
-        "gir": "Greens in Regulation",
-        "penalty/ob": "Penalties / OB per Round",
-        "handicap":"Handicap Index",
-        "birdies":"Birdies",
-        "dbl_bogeys_plus":"Double Bogey or Worse",
-        "profit/loss":"Profit/Loss",
-        "match_format":"Match Format"
-    }
 
     data = data.set_index("date").sort_index()
     data["rolling_avg"] = data.groupby("name")[column].transform(lambda t: t.rolling(window).mean())
@@ -522,20 +480,6 @@ def scatter(data:pd.DataFrame, column:str, color_map:dict={"Dave":'#636EFA', "Pe
     fig:plotly.graph_objects.Figure | scatterplot with color-coded player relationships, options for how to plot additional dimensions
     
     """
-    label_dict = {
-        "adj_gross_score":"Adjusted Gross Score", 
-        "handicap_diff": "Handicap Differential",
-        "putts": "Putts per Round",
-        "3_putts": "3-Putts per Round",
-        "fairways_hit": "Fairways Hit per Round",
-        "gir": "Greens in Regulation",
-        "penalty/ob": "Penalties / OB per Round",
-        "handicap":"Handicap Index",
-        "birdies":"Birdies",
-        "dbl_bogeys_plus":"Double Bogey or Worse",
-        "profit/loss":"Profit/Loss",
-        "match_format":"Match Format"
-    }
 
     if size:
         title = f"Adj Score vs {label_dict[column]} with {label_dict[size]} as Size<br><sup>X-Jittered for Visibility</sup>"
@@ -568,20 +512,7 @@ def find_round(data:pd.DataFrame, name:str, date:pd.Timestamp='2024-07-22'):
     ---------------
     fig:plotly.graph_objects.Figure | barplot for each player from {names} who played a round of golf on {date}
     """
-    label_dict = {
-        "adj_gross_score":"Adjusted Score", 
-        "handicap_diff": "Handicap Differential",
-        "putts": "Putts",
-        "3_putts": "3-Putts",
-        "fairways_hit": "Fwys Hit",
-        "gir": "G.I.R.",
-        "penalty/ob": "Penalties/OB",
-        "handicap":"Handicap Index",
-        "birdies":"Birdies",
-        "dbl_bogeys_plus":"Double or Worse",
-        "profit/loss":"Profit/Loss",
-        "match_format":"Match Format"
-    }
+
     
     features = ["putts", "3_putts", "fairways_hit", "gir", "penalty/ob", "birdies", "dbl_bogeys_plus", "adj_gross_score", "profit/loss"]
     color_list = px.colors.qualitative.Bold
@@ -651,7 +582,7 @@ def profit_by_match_type(data:pd.DataFrame, aggfunc:str):
     fig:plotly.express.figure | bar plot showing PnL by category per player
     """
 
-    label_dict = {
+    agg_dict = {
         "mean":"Average",
         "median":"50th Percentile",
         "sum":"Total"
@@ -659,8 +590,8 @@ def profit_by_match_type(data:pd.DataFrame, aggfunc:str):
     
     fig = px.bar(data_frame = data.groupby(["name", "match_format"])["profit/loss"].agg([aggfunc]).reset_index(), x="name",
                 y=aggfunc, color="match_format", barmode="group", hover_name = "name", hover_data={"name":False},
-                labels={"match_format":"Match Format", "name":"Player Name", aggfunc:f"{label_dict[aggfunc]} Profit/Loss"},
-                title = f"{label_dict[aggfunc]} Profit/Loss by Match Format")
+                labels={"match_format":"Match Format", "name":"Player Name", aggfunc:f"{agg_dict[aggfunc]} Profit/Loss"},
+                title = f"{agg_dict[aggfunc]} Profit/Loss by Match Format")
     
     return fig
 
