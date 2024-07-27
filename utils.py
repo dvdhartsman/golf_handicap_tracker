@@ -30,7 +30,7 @@ label_dict = {
 def add_round(name:str, date:str, adj_gross_score:int, course_rating:float, slope_rating:float,
               putts:int=np.nan, three_putts:int=np.nan, fairways:int=np.nan, gir:int=np.nan, penalties:int=np.nan, birdies:int=np.nan,
               trpl_bogeys_plus:int=np.nan, profit_loss:float=np.nan, match_format:str=np.nan,
-              golf_course:str=np.nan, opponent_s:str=np.nan, notes:str=np.nan, calc_diff:bool=True) -> pd.Series:
+              golf_course:str=np.nan, opponent_s:str=np.nan, notes:str="", calc_diff:bool=True) -> pd.Series:
 
     
     
@@ -54,6 +54,7 @@ def add_round(name:str, date:str, adj_gross_score:int, course_rating:float, slop
     match_format:str | type of competition
     golf_course:str | name of course played at
     opponent_s:str | name of opponent/s for the round
+    notes:str | notes from the round
     calc_diff:bool | whether or not to calculate the handicap differential on the spot, could be deferred to perform vectorization if MANY rows
                         are being entered simultaneously
 
@@ -79,6 +80,7 @@ def add_round(name:str, date:str, adj_gross_score:int, course_rating:float, slop
         "match_format":match_format,
         "golf_course":golf_course,
         "opponent/s":opponent_s,
+        "notes":notes
         }
 
     if calc_diff:
