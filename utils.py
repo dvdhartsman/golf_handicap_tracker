@@ -7,9 +7,30 @@ import plotly.graph_objects as go
 import plotly.figure_factory as ff
 
 
-def add_round(name:str, date:str, adj_gross_score:int, course_rating:np.number, slope_rating:np.number,
+
+label_dict = {
+        "adj_gross_score":"Adjusted Gross Score", 
+        "handicap_diff": "Handicap Differential",
+        "putts": "Putts per Round",
+        "3_putts": "3-Putts per Round",
+        "fairways_hit": "Fairways Hit per Round",
+        "gir": "Greens in Regulation",
+        "penalty/ob": "Penalties / OB per Round",
+        "handicap":"Handicap Index",
+        "birdies":"Birdies",
+        "dbl_bogeys_plus":"Double Bogey or Worse",
+        "profit/loss":"Profit/Loss",
+        "match_format":"Match Format",
+        "golf_course":"Golf Course",
+        "oppenent_s":"Opponent/s",
+        "notes":"Notes"
+    }
+
+
+def add_round(name:str, date:str, adj_gross_score:int, course_rating:float, slope_rating:float,
               putts:int=np.nan, three_putts:int=np.nan, fairways:int=np.nan, gir:int=np.nan, penalties:int=np.nan, birdies:int=np.nan,
-              dbl_bogeys_plus:int=np.nan, profit_loss:float=np.nan, match_format:str=None, calc_diff:bool=True) -> pd.Series:
+              trpl_bogeys_plus:int=np.nan, profit_loss:float=np.nan, match_format:str=np.nan,
+              golf_course:str=np.nan, opponent_s:str=np.nan, notes:str=np.nan, calc_diff:bool=True) -> pd.Series:
 
     
     
@@ -27,6 +48,14 @@ def add_round(name:str, date:str, adj_gross_score:int, course_rating:np.number, 
     fairways:int | options if recorded, the total number of fairways hit on par 4's and par 5's
     gir:int | optional greens in regulation, the total number of gir on all 18 holes
     penalties:int | optional total number of instances of out-of-bounds shots or water penalties
+    birdies:int | number of birdies (one-under on a hole) in a round
+    trpl_bogeys_plus:int | number of holes with scores worse than a double bogey
+    profit_loss:float | number of betting units won or lost in a competition round
+    match_format:str | type of competition
+    golf_course:str | name of course played at
+    opponent_s:str | name of opponent/s for the round
+    calc_diff:bool | whether or not to calculate the handicap differential on the spot, could be deferred to perform vectorization if MANY rows
+                        are being entered simultaneously
 
     Returns:
     ------------------
@@ -45,9 +74,11 @@ def add_round(name:str, date:str, adj_gross_score:int, course_rating:np.number, 
         "gir": gir, 
         "penalty/ob": penalties,
         "birdies":birdies,
-        "dbl_bogeys_plus":dbl_bogeys_plus,
+        "trpl_bogeys_plus":trpl_bogeys_plus,
         "profit/loss":profit_loss,
-        "match_format":match_format
+        "match_format":match_format,
+        "golf_course":golf_course,
+        "opponent/s":opponent_s,
         }
 
     if calc_diff:
@@ -99,7 +130,7 @@ def generate_data(data:pd.DataFrame, player_list:list=["Pete", "Dave", "Eric", "
         avg_gir = np.random.randint(low=0, high=18)
         avg_penalities = np.random.randint(low=0, high=10)
         avg_birdies = np.random.randint(low=0, high=2)
-        avg_dbl_plus = np.random.randint(low=0, high=3)
+        avg_trpl_plus = np.random.randint(low=0, high=3)
         avg_profit_loss = np.random.choice([*np.arange(-1, 1.5, .5)])
         
         for i in range(100):
@@ -130,15 +161,22 @@ def generate_data(data:pd.DataFrame, player_list:list=["Pete", "Dave", "Eric", "
                 gir = 0
             penalties = int(max(np.random.normal(loc=avg_penalities, scale = 2, size = 1),0))
             birdies = int(max(np.random.normal(loc=avg_birdies, scale = 1, size = 1),0))
-            dbl_bogeys = int(max(np.random.normal(loc=avg_dbl_plus, scale = 1, size = 1),0))
+            trpl_bogeys = int(max(np.random.normal(loc=avg_dbl_plus, scale = 1, size = 1),0))
             profit_loss = round(float(np.random.normal(loc=avg_profit_loss, scale = 2, size = 1)) * 2) / 2 
             match_format = np.random.choice(["Skins", "Match Play", "Stroke Play", "Dots"])
+            golf_course = np.random.choice(["Augusta National", "Pebble Beach", "Bethpage Black", "Kiawah Island", "Whistling Straits",
+                                            "Pinehurst", "Hollybrook", "Harbortown"])
+            opponent_s = np.random.choice([i for i in player_list if i != n])
+            notes = np.random.choice(["I played well", "I played badly", "I got lucky", "I got unlucky", "The golf Gods hate me"])
+
+            
         
             # Call function and add to the df
             data.loc[len(data)] = add_round(name=name, date=date, adj_gross_score=adj_gross_score, course_rating=course_rating, 
                                             slope_rating=slope_rating, putts=putts,
                                             three_putts=three_putts, fairways=fairways, gir=gir, penalties=penalties, birdies=birdies, 
-                                            dbl_bogeys_plus=dbl_bogeys, profit_loss=profit_loss, match_format=match_format,
+                                            trpl_bogeys_plus=trpl_bogeys, profit_loss=profit_loss, match_format=match_format,
+                                            golf_course=golf_course, opponent_s=opponent_s, notes=notes,
                                             calc_diff=False)  
             # calc_diff = False to save on computational resources by performing vector op
 
@@ -240,20 +278,20 @@ def plot_statistics(data, column, color_map:dict = {"Dave":'#636EFA', "Pete":'#E
     fig: px.Figure | plotly figure of a lineplot
     """
 
-    label_dict = {
-        "adj_gross_score":"Adjusted Gross Score", 
-        "handicap_diff": "Handicap Differential",
-        "putts": "Putts per Round",
-        "3_putts": "3-Putts per Round",
-        "fairways_hit": "Fairways Hit per Round",
-        "gir": "Greens in Regulation",
-        "penalty/ob": "Penalties / OB per Round",
-        "handicap":"Handicap Index",
-        "birdies":"Birdies",
-        "dbl_bogeys_plus":"Double Bogey or Worse",
-        "profit/loss":"Profit/Loss",
-        "match_format":"Match Format"
-    }
+    # label_dict = {
+    #     "adj_gross_score":"Adjusted Gross Score", 
+    #     "handicap_diff": "Handicap Differential",
+    #     "putts": "Putts per Round",
+    #     "3_putts": "3-Putts per Round",
+    #     "fairways_hit": "Fairways Hit per Round",
+    #     "gir": "Greens in Regulation",
+    #     "penalty/ob": "Penalties / OB per Round",
+    #     "handicap":"Handicap Index",
+    #     "birdies":"Birdies",
+    #     "dbl_bogeys_plus":"Double Bogey or Worse",
+    #     "profit/loss":"Profit/Loss",
+    #     "match_format":"Match Format"
+    # }
         
     # if len(data.dropna(subset=column)["date"].unique()) < 50:
     #     length = len(data.dropna(subset=column)["date"].unique()) 
