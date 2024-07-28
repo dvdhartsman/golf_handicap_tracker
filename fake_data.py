@@ -318,7 +318,7 @@ def fake_data():
     
     if not query_df.empty:         #### Edit Later #### 
         st.dataframe(query_df[["name"] + num_names + cat_names].rename(columns=label_dict).rename(columns={"name":"Player"}), hide_index=True, use_container_width=True)
-        st.markdown("---"
+        st.markdown("---")
         for name in query_df["name"].unique():
             st.write(f"Round notes for {name} on {round_date}", query_df["notes"].iloc[0])
             st.plotly_chart(find_round(query_df, name, pd.to_datetime(round_date, format='YYYY-MM-dd')))
