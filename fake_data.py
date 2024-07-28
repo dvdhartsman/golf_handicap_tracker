@@ -184,6 +184,7 @@ def fake_data():
     
     agg_func = st.selectbox("Profit and Loss by Match Format: How would you like to Aggregate?", [*agg_dict_rev.keys()])
     st.plotly_chart(profit_by_match_type(st.session_state.df, agg_dict_rev[agg_func]))
+    st.markdown("---")
     
     # Trends, line plots
     st.subheader(":violet[Trends Over Time:]")
