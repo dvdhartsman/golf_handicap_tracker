@@ -47,10 +47,6 @@ def fake_data():
                    "birdies"]
     cat_features = ["golf_course", "match_format", "opponent/s"]
 
-    "name", "date", "adj_gross_score", "course_rating", "slope_rating", "handicap_diff",
-                           "putts", "3_putts", "fairways_hit", "gir", "penalty/ob", "birdies", "trpl_bogeys_plus", 
-                           "profit/loss", "match_format", "golf_course", "opponent/s", "notes"
-
     
     # Give the option to add data
     st.subheader(":violet[Add your own data?:]")
