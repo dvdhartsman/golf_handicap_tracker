@@ -43,8 +43,7 @@ def fake_data():
     reverse_labels = {val:key for key, val in label_dict.items()}
 
     # Numerical Features
-    num_names = ["putts", "3_putts", "fairways_hit", "gir", "penalty/ob", "birdies", "trpl_bogeys_plus", "adj_gross_score", "profit/loss",
-                   "birdies"]
+    num_names = ["putts", "3_putts", "fairways_hit", "gir", "penalty/ob", "birdies", "trpl_bogeys_plus", "adj_gross_score", "profit/loss"]
     cat_names = ["golf_course", "match_format", "opponent/s"]
 
     num_features = [label_dict[i] for i in num_names]
