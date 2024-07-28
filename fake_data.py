@@ -174,6 +174,8 @@ def fake_data():
     st.subheader(":violet[The only reason we play, Profit and Loss:]")
     st.plotly_chart(total_profit(st.session_state.df, color_map=color_map))
 
+    st.markdown("---")
+    
     agg_dict = {
         "mean":"Average Profit/Loss",
         "median":"Median Profit/Loss",
@@ -184,7 +186,7 @@ def fake_data():
     
     agg_func = st.selectbox("Profit and Loss by Match Format: How would you like to Aggregate?", [*agg_dict_rev.keys()])
     st.plotly_chart(profit_by_match_type(st.session_state.df, agg_dict_rev[agg_func]))
-    st.markdown("---")
+    
     
     # Trends, line plots
     st.subheader(":violet[Trends Over Time:]")
