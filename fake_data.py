@@ -7,7 +7,6 @@ import streamlit as st
 from utils import add_round, get_handicaps, fill_handicaps, plot_statistics, histplot, pie_chart, dist_plot, rolling_avg, scatter, mean_med_stats, find_round, handicap_differentials, total_profit, profit_by_match_type
 
 
-
 def fake_data():
     """
     Display plots and input options for the simulated data
@@ -42,6 +41,15 @@ def fake_data():
 
     # Also useful for labeling, titling, etc.
     reverse_labels = {val:key for key, val in label_dict.items()}
+
+    # Numerical Features
+    num_features = ["putts", "3_putts", "fairways_hit", "gir", "penalty/ob", "birdies", "trpl_bogeys_plus", "adj_gross_score", "profit/loss",
+                   "birdies"]
+    cat_features = ["golf_course", "match_format", "opponent/s"]
+
+    "name", "date", "adj_gross_score", "course_rating", "slope_rating", "handicap_diff",
+                           "putts", "3_putts", "fairways_hit", "gir", "penalty/ob", "birdies", "trpl_bogeys_plus", 
+                           "profit/loss", "match_format", "golf_course", "opponent/s", "notes"
 
     
     # Give the option to add data
@@ -183,7 +191,7 @@ def fake_data():
     st.subheader(":violet[Trends Over Time:]")
     st.write("Use the dropdown menu to select a metric and the date slider to select a range of dates")
     
-    trend_var = st.selectbox("Trend Metric:", [key for key in reverse_labels.keys() if key != "Match Format"], index=7)
+    trend_var = st.selectbox("Trend Metric:", num_features, index=7)
     trend_data = st.session_state.df.dropna(subset=reverse_labels[trend_var])
 
     # Set up min and max dates
@@ -200,20 +208,20 @@ def fake_data():
     # Rolling averages to evaluate smoothed trends
     st.subheader(":violet[Rolling average statistics:]")
     st.write("Use the dropdown menu to select a metric and the slider to select the size of your window")
-    roll_var = st.selectbox("Rolling Average Metric:", [key for key in reverse_labels.keys() if key != "Match Format"], index=0)
+    roll_var = st.selectbox("Rolling Average Metric:", num_features, index=0)
     window = st.slider("Number of Rounds to Include in the Rolling Window:", min_value=5, max_value = 30) 
     st.plotly_chart(rolling_avg(st.session_state.df, reverse_labels[roll_var], window, color_map=color_map))
 
     # Mean, median, stddev aggregate stats for different metrics
     st.subheader(":violet[Average, median, and standard deviation aggregate statistics:]")
     st.write("Use the dropdown menu to select a metric")
-    agg_var = st.selectbox("Aggregate Metric:", [key for key in reverse_labels.keys() if key != "Match Format"], index=0)
+    agg_var = st.selectbox("Aggregate Metric:", num_features, index=0)
     st.plotly_chart(mean_med_stats(st.session_state.df, reverse_labels[agg_var]))
 
     # Distribution plots for various metrics
     st.subheader(":violet[Distributions: Comparing distributions of different statistics across players:]")
     st.write("Use the dropdown menu to select a metric")
-    hist_var = st.selectbox("Distribution Metric:", [key for key in reverse_labels.keys() if key != "Match Format"], index=0)
+    hist_var = st.selectbox("Distribution Metric:", num_features, index=0)
     st.plotly_chart(histplot(st.session_state.df, reverse_labels[hist_var], color_map=color_map))
 
     # Proportion pie charts
@@ -222,7 +230,8 @@ def fake_data():
 
     pie_var = st.selectbox("Proportion Metric:", 
                            [key for key in reverse_labels.keys() if key not in ["Adjusted Gross Score", "Handicap Differential", 
-                                                                                "Handicap Index", "Profit/Loss", "Match Format"]], index=1)
+                                                                                "Handicap Index", "Profit/Loss", "Match Format",
+                                                                               "Opponent/s", "Golf Course", "Notes"]], index=1)
     
     
     names_list = st.session_state.df.dropna(subset=reverse_labels[pie_var])["name"].unique()
@@ -253,10 +262,12 @@ def fake_data():
     st.write("Use the first dropdown menu to select a metric for the X-Axis and the second dropdown to optionally add a 'size' metric")
     
     scatter_var = st.selectbox("X-Variable:", [key for key in reverse_labels.keys() if key not in \
-                                                  ["Adjusted Gross Score", "Handicap Differential", "Handicap Index", "Match Format"]], index=0)
+                                                  ["Adjusted Gross Score", "Handicap Differential", "Handicap Index", "Match Format",
+                                                  "Opponent/s", "Golf Course", "Notes"]], index=0)
     
     size_var = st.selectbox("Size-Variable (Optional):", [None] + [key for key in reverse_labels.keys() if key not in \
-                                                  ["Adjusted Gross Score", "Handicap Differential", "Handicap Index", "Match Format"]], index=0)
+                                                  ["Adjusted Gross Score", "Handicap Differential", "Handicap Index", "Match Format",
+                                                  "Opponent/s", "Golf Course", "Notes"]], index=0)
     
     
     st.plotly_chart(scatter(data=st.session_state.df, column=reverse_labels[scatter_var], size=reverse_labels[size_var] if size_var else None, color_map=color_map)) 
@@ -308,7 +319,7 @@ def fake_data():
         st.subheader(":red[No records found for this date]")
     
     if not query_df.empty:         #### Edit Later #### 
-        st.dataframe(query_df[["name"]+[key for key in label_dict.keys()]].rename(columns=label_dict).rename(columns={"name":"Player"})
+        st.dataframe(query_df[num_features + cat_features].rename(columns=label_dict).rename(columns={"name":"Player"})
                      .drop(columns="Handicap Index"), hide_index=True, use_container_width=True)
         for name in query_df["name"].unique():
             st.plotly_chart(find_round(query_df, name, pd.to_datetime(round_date, format='YYYY-MM-dd')))
