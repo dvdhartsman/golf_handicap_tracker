@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import streamlit as st
+from utils import add_border
 
 def background_info():
     """
@@ -17,7 +18,7 @@ def background_info():
     
     # Paragraph 2
     st.subheader(":blue[Calculating Player Handicaps]")
-    st.markdown("""To calculate player handicaps, the :green[_"handicap differential"_] for _each individual round_ must first be recorded. The handicap differential is calculated:""")
+    st.markdown("""To calculate player handicaps, the :orange[_"handicap differential"_] for _each individual round_ must first be recorded. The handicap differential is calculated:""")
 
     # Equation for Handicap Differential
     st.markdown(r"""
@@ -35,12 +36,12 @@ $$
 - The standard Slope Rating is 113.""")
 
     # Equitable Stroke Control Paragraph
-    st.markdown(""":green[_Equitable stroke control_] means that for a given handicap, there is a maximum allowable score on any individual hole. :green[_"ESC"_] helps to protect a golfer's handicap from the negative impact of any individual hole where they play uncharacteristically bad golf. Those maximum scores for individual holes are capped as follows:""")
+    st.markdown(""":orange[_Equitable stroke control_] means that for a given handicap, there is a maximum allowable score on any individual hole. :orange[_"ESC"_] helps to protect a golfer's handicap from the negative impact of any individual hole where they play uncharacteristically bad golf. Those maximum scores for individual holes are capped as follows:""")
     
     # DF display
     st.dataframe(pd.read_csv("ESC.csv").rename(columns={"Course Handicap":"Player Handicap"}), use_container_width=True, hide_index=True)
 
-    st.markdown("---")
+    add_border()
     
     # Handicap Calc Paragraph
     st.markdown("""As you continue to record the handicap differentials for each round of golf you have played, you will also need to meet a minimum threshold of total rounds played. An official handicap can be obtained after recording 54 holes of golf (three 18-hole rounds). Your handicap will be calculated by averaging a specific number of your lowest scores over a specified window of your most recent scores depending on how many rounds you have recorded.""")
@@ -64,4 +65,4 @@ $$
 
     
     # Synthetic Data Display
-    st.markdown("---")
+    add_border()

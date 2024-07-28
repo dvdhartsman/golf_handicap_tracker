@@ -513,7 +513,7 @@ def find_round(data:pd.DataFrame, name:str, date:pd.Timestamp='2024-07-22'):
     """
 
     
-    features = ["putts", "3_putts", "fairways_hit", "gir", "penalty/ob", "birdies", "trpl_bogeys_plus", "adj_gross_score", "profit/loss"]
+    features = ["putts", "3_putts", "fairways_hit", "gir", "penalty/ob", "birdies", "trpl_bogeys_plus", "handicap_diff", "profit/loss"]
     color_list = px.colors.qualitative.Bold
 
     fig = go.Figure()
@@ -532,10 +532,12 @@ def find_round(data:pd.DataFrame, name:str, date:pd.Timestamp='2024-07-22'):
 
         m_format = player_data["match_format"].iloc[0]
         golf_course = player_data["golf_course"].iloc[0]
+        adj_score = player_data["adj_gross_score"].iloc[0]
         
         fig.update_layout(
-        title=f"Golf Round Data for {name} on {date.date()} <br><sup>{golf_course} - {m_format}</sup>" if m_format != None else 
-            f"Golf Round Data for {name} on {date.date()}<br><sup>{golf_course} (No format listed)</sup>",
+        title=f"Golf Round Data for {name} on {date.date()} <br><sup>Adj Gross Score: {adj_score} | {golf_course} - {m_format}</sup>" if m_format
+            != None else f"Golf Round Data for {name} on {date.date()}<br><sup>Adj Gross Score: {adj_score} | {golf_course} (No format \
+            listed</sup>",
         xaxis_title="Features",
         yaxis_title="Values",
         barmode='group',
@@ -569,7 +571,7 @@ def total_profit(data:pd.DataFrame, color_map:dict={"Dave":'#636EFA', "Pete":'#E
 
 
 # -----------------------------------Make this more general for categorical and columnar selection ----------------------
-def profit_by_match_type(data:pd.DataFrame, aggfunc:str):
+def agg_features_by_cat(data:pd.DataFrame, category:str, feature:str, aggfunc:str):
     """
     Display the PnL by match format
 
@@ -589,10 +591,10 @@ def profit_by_match_type(data:pd.DataFrame, aggfunc:str):
         "sum":"Total"
     }
     
-    fig = px.bar(data_frame = data.groupby(["name", "match_format"])["profit/loss"].agg([aggfunc]).reset_index(), x="name",
-                y=aggfunc, color="match_format", barmode="group", hover_name = "name", hover_data={"name":False},
-                labels={"match_format":"Match Format", "name":"Player Name", aggfunc:f"{agg_dict[aggfunc]} Profit/Loss"},
-                title = f"{agg_dict[aggfunc]} Profit/Loss by Match Format")
+    fig = px.bar(data_frame = data.groupby(["name", category])[feature].agg([aggfunc]).reset_index(), x="name",
+                y=aggfunc, color=category, barmode="group", hover_name = "name", hover_data={"name":False},
+                labels={category:label_dict[category], "name":"Player Name", aggfunc:f"{agg_dict[aggfunc]} {label_dict[feature]}"},
+                title = f"{agg_dict[aggfunc]} {label_dict[feature]} by {label_dict[category]}")
     
     return fig
 
@@ -605,7 +607,11 @@ def explanation_of_plots():
 
     import streamlit as st
     
-    st.markdown("---")
+    st.markdown("""<hr style="border: 3px solid #0071da">""", unsafe_allow_html=True)
     st.markdown(":blue[_A brief note about the plots:_]")
-    st.markdown("You can isolate a plot component by double-clicking on it in the legend, or you can toggle on/off individual plot items by clicking on the desired item in the legend. You can also click and drag over quadrants of graphs to zoom in on areas of interest. Click the home icon in the upper-right corner or double-click on the plot to zoom back out to the original scope. Finally, as you move your mouse cursor over the plots, you will notice hover-values that display additional information. Thank you and enjoy the dashboard")
-    st.markdown("---")
+    st.markdown("You can isolate a plot component by double-clicking on it in the legend, or you can toggle on/off individual plot items by clicking on the desired item in the legend. You can also click-and-drag over quadrants of graphs to zoom in on specific areas within the plot. Click the home icon in the upper-right corner or double-click on the plot to zoom back out to the original scope. Finally, as you move your mouse cursor over the plots, you will notice that hoverboxes display additional information about each trace within the plot. Thank you and enjoy the dashboard!")
+
+
+def add_border():
+    import streamlit as st
+    return st.markdown("""<hr style="border: 3px solid #0071da">""", unsafe_allow_html=True)
