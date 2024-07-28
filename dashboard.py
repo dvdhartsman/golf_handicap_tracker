@@ -233,7 +233,7 @@ def dashboard(data):
     
     size_var = st.selectbox("Size-Variable (Optional):", [None] + [key for key in reverse_labels.keys() if key not in \
                                                   ["Adjusted Gross Score", "Handicap Differential", "Handicap Index", "Match Format",
-                                                  "Opponent/s", "Golf Course", "Notes"]], index=0)
+                                                  "Opponent/s", "Golf Course", "Notes", "Profit/Loss"]], index=0)
     
     
     st.plotly_chart(scatter(data=data, column=reverse_labels[scatter_var], size=reverse_labels[size_var] if size_var else None, color_map=color_map))
