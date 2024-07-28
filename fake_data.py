@@ -322,3 +322,4 @@ def fake_data():
         for name in query_df["name"].unique():
             st.write(f'Round notes for {name} on {round_date}: :green["{query_df["notes"].iloc[0]}"]')
             st.plotly_chart(find_round(query_df, name, pd.to_datetime(round_date, format='YYYY-MM-dd')))
+            st.markdown("---")
