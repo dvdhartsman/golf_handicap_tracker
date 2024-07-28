@@ -55,10 +55,10 @@ def dashboard(data):
 
  # -------------------- # Synthetic Data Display ----------------------   
     
-    add_border()
-    # Numerical handicap displays for each player
-    st.markdown("""<div style="text-align: center; font-size:45px; color:#ff8c00">
-            <b><u><i>Current Player Handicaps:</i></u></b>
+    # add_border()
+    # Numerical handicap displays for each player #ff2400 #f94d00
+    st.markdown("""<div style="text-align: center; font-size:45px; color:orange">  
+            <b><u><i>Up-To-Date Player Handicaps:</i></u></b>
             </div>""", unsafe_allow_html=True)
     
     # finding unique players with valid handicaps
@@ -76,11 +76,11 @@ def dashboard(data):
                 # Display that player's handicap
                 st.markdown(f"""
             <div style="text-align: center;">
-                <h2 style="font-size:35px; color: orange;">{name}</h2>
-                <h2 style="font-size:30px; color: #40a3ff;">{recent_handicap:.4f}</h2>
+                <h2 style="font-size:35px; color: #40a3ff;">{name}</h2>
+                <h2 style="font-size:30px; color: #cc0000;">{recent_handicap:.4f}</h2>
             </div>
             """, unsafe_allow_html=True)
-                st.markdown("""<hr style="border: 2px solid lightblue">""", unsafe_allow_html=True)
+                st.markdown("""<hr style="border: 2px solid #e5e4e2">""", unsafe_allow_html=True)
                 
         elif idx % 3 == 1:
             with col2:
@@ -90,11 +90,11 @@ def dashboard(data):
                 # Display that player's handicap
                 st.markdown(f"""
             <div style="text-align: center;">
-                <h2 style="font-size:35px; color: orange;">{name}</h2>
-                <h2 style="font-size:30px; color: #40a3ff;">{recent_handicap:.4f}</h2>
+                <h2 style="font-size:35px; color: #40a3ff;">{name}</h2>
+                <h2 style="font-size:30px; color: #cc0000;">{recent_handicap:.4f}</h2>
             </div>
             """, unsafe_allow_html=True)
-                st.markdown("""<hr style="border: 2px solid lightblue">""", unsafe_allow_html=True)
+                st.markdown("""<hr style="border: 2px solid #e5e4e2">""", unsafe_allow_html=True)
 
         else:
             with col3:
@@ -104,11 +104,11 @@ def dashboard(data):
                 # Display that player's handicap
                 st.markdown(f"""
             <div style="text-align: center;">
-                <h2 style="font-size:35px; color: orange;">{name}</h2>
-                <h2 style="font-size:30px; color: #40a3ff;">{recent_handicap:.4f}</h2>
+                <h2 style="font-size:35px; color: #40a3ff;">{name}</h2>
+                <h2 style="font-size:30px; color: #cc0000;">{recent_handicap:.4f}</h2>
             </div>
             """, unsafe_allow_html=True)
-                st.markdown("""<hr style="border: 2px solid lightblue">""", unsafe_allow_html=True)
+                st.markdown("""<hr style="border: 2px solid #e5e4e2">""", unsafe_allow_html=True)
         
 
 

@@ -35,6 +35,7 @@ def main():
         options=['Fake Data', 'Real Data'],
         icons=['bar-chart-fill', 'person-fill'],  # 'bar-chart-fill', 'person-fill'
         orientation='horizontal',
+        styles={"background-color":"blue"}
     )
 
     column_order = ["name", "date", "golf_course", "match_format", "opponent/s", "profit/loss", "course_rating", "slope_rating",
@@ -51,6 +52,7 @@ def main():
     
         st.subheader(":blue[While my friends and I collect some data...]")
         st.markdown("""I have generated some synthetic data to demonstrate the visualizations we will use to track and analyze our scores. This data is purely for purposes of demonstration, and some of the statistics and relationships shown will likely not reflect reality for most golfers. """)
+        add_border()
         explanation_of_plots()
 
         
@@ -115,7 +117,8 @@ def main():
                 st.dataframe(st.session_state.df.loc[st.session_state.df["name"] == rd_name].drop(columns="jittered_col"), hide_index=True,
                              use_container_width=True)
     
-        
+
+        add_border()
         # Run the rest of the dashboard
         dashboard(st.session_state.df)
     
@@ -135,8 +138,8 @@ def main():
         st.subheader(":red[We are still collecting data currently, please bear with us.]")
         st.write('Switch back to the "Fake Data" tab to see all of the available visualizations with a larger (synthetic) dataset.')
 
-        st.markdown("""<hr style="border: 2px solid #40a3ff">""", unsafe_allow_html=True)
-        st.subheader(":red[Handicaps are still pending until a sufficient number of rounds have been played...]")
+        add_border()
+        st.subheader(":blue[Handicaps are still pending until a sufficient number of rounds have been played...]")
         dashboard(df)
 
     

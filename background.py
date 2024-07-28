@@ -17,7 +17,8 @@ def background_info():
     st.markdown("""The USGA (United States Golf Association) says that "...in order to establish and maintain a Handicap Index, a player must be a member of an authorized golf club." There are mobile applications that offer the ability to track golf statistics and calculate a handicap, but those apps often have associated subscription fees. Furthermore, if the members of my regular golf group don't want to use the app or pay the subscription, then their handicaps will continue to be unknown values.""")
     
     # Paragraph 2
-    st.subheader(":blue[Calculating Player Handicaps]")
+    add_border()
+    st.subheader(":blue[Calculating Player Handicap Differentials]")
     st.markdown("""To calculate player handicaps, the :orange[_"handicap differential"_] for _each individual round_ must first be recorded. The handicap differential is calculated:""")
 
     # Equation for Handicap Differential
@@ -42,7 +43,7 @@ $$
     st.dataframe(pd.read_csv("ESC.csv").rename(columns={"Course Handicap":"Player Handicap"}), use_container_width=True, hide_index=True)
 
     add_border()
-    
+    st.subheader(":blue[Calculating Player Handicap Indexes]")
     # Handicap Calc Paragraph
     st.markdown("""As you continue to record the handicap differentials for each round of golf you have played, you will also need to meet a minimum threshold of total rounds played. An official handicap can be obtained after recording 54 holes of golf (three 18-hole rounds). Your handicap will be calculated by averaging a specific number of your lowest scores over a specified window of your most recent scores depending on how many rounds you have recorded.""")
 
