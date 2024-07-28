@@ -607,11 +607,11 @@ def explanation_of_plots():
 
     import streamlit as st
     
-    st.markdown("""<hr style="border: 3px solid #0071da">""", unsafe_allow_html=True)
+    st.markdown("""<hr style="border: 3px solid #007ef3">""", unsafe_allow_html=True)
     st.markdown(":blue[_A brief note about the plots:_]")
     st.markdown("You can isolate a plot component by double-clicking on it in the legend, or you can toggle on/off individual plot items by clicking on the desired item in the legend. You can also click-and-drag over quadrants of graphs to zoom in on specific areas within the plot. Click the home icon in the upper-right corner or double-click on the plot to zoom back out to the original scope. Finally, as you move your mouse cursor over the plots, you will notice that hoverboxes display additional information about each trace within the plot. Thank you and enjoy the dashboard!")
 
 
 def add_border():
     import streamlit as st
-    return st.markdown("""<hr style="border: 3px solid #0071da">""", unsafe_allow_html=True)
+    return st.markdown("""<hr style="border: 3px solid #007ef3">""", unsafe_allow_html=True)
