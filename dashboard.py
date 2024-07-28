@@ -193,10 +193,10 @@ def dashboard(data):
     st.subheader(":blue[Proportions of contributing statistics:]")
     st.write("Use the dropdown menu to select a metric")
 
+    # "Profit/Loss", "Match Format", "Opponent/s", "Golf Course",
     pie_var = st.selectbox("Proportion Metric:", 
                            [key for key in reverse_labels.keys() if key not in ["Adjusted Gross Score", "Handicap Differential", 
-                                                                                "Handicap Index", "Profit/Loss", "Match Format",
-                                                                               "Opponent/s", "Golf Course", "Notes"]], index=1)
+                                                                                "Handicap Index",  "Notes"]], index=1)
     
     
     names_list = data.dropna(subset=reverse_labels[pie_var])["name"].unique()
