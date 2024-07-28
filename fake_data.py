@@ -308,7 +308,7 @@ def fake_data():
         st.subheader(":red[No records found for this date]")
     
     if not query_df.empty:         #### Edit Later #### 
-        st.dataframe(query_df[["name"]+[key for key in label_dict.keys()]].rename(columns=label_dict).rename(columns={"name":"Player"})\
+        st.dataframe(query_df[["name"]+[key for key in label_dict.keys()]].rename(columns=label_dict).rename(columns={"name":"Player"})
                      .drop(columns="Handicap Index"), hide_index=True, use_container_width=True)
         for name in query_df["name"].unique():
             st.plotly_chart(find_round(query_df, name, pd.to_datetime(round_date, format='YYYY-MM-dd')))
