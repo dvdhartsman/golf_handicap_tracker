@@ -250,20 +250,20 @@ def dashboard(data):
     # Boilerplate analysis options
     if abs(corr) <.3:
         # Weak correlation
-        st.write(f"The relationship between Adjusted Gross Score and {scatter_var} demonstrates a weak correlation, and therefore it is likely that this statistic is not significantly influencing your scores.")
+        st.write(f"The relationship between :orange[Adjusted Gross Score] and :orange[{scatter_var}] demonstrates a :orange[_weak correlation_], and therefore it is likely that this statistic is not significantly influencing your scores.")
     
     # Positive correlation
     elif .7 > corr >= .3:
-        st.write(f"The relationship between Adjusted Gross Score and {scatter_var} demonstrates a moderate positive correlation, meaning that as {scatter_var} increases, Adjusted Gross Score will also increase and vice versa.")
+        st.write(f"The relationship between :orange[Adjusted Gross Score] and :orange[{scatter_var}] demonstrates a :blue[_moderate positive_] correlation, meaning that as {scatter_var} increases, Adjusted Gross Score will also increase and vice versa.")
     elif corr > .7:
         
-        st.write(f"The relationship between Adjusted Gross Score and {scatter_var} demonstrates a strong positive correlation, meaning that as {scatter_var} increases, Adjusted Gross Score will also increase and vice versa.")
+        st.write(f"The relationship between :orange[Adjusted Gross Score] and :orange[{scatter_var}] demonstrates a :green[_strong positive correlation_], meaning that as {scatter_var} increases, Adjusted Gross Score will also increase and vice versa.")
     
     # Negative correlation
     elif -.7 < corr <= -.3:
-        st.write(f"The relationship between Adjusted Gross Score and {scatter_var} demonstrates a moderate negative correlation, meaning that as {scatter_var} increases, Adjusted Gross Score will decrease and vice versa.")
+        st.write(f"The relationship between :orange[Adjusted Gross Score] and :orange[{scatter_var}] demonstrates a :blue[_moderate negative correlation_], meaning that as {scatter_var} increases, Adjusted Gross Score will decrease and vice versa.")
     elif corr < -.7:
-        st.write(f"The relationship between Adjusted Gross Score and {scatter_var} demonstrates a strong negative correlation, meaning that as {scatter_var} increases, Adjusted Gross Score will decrease and vice versa.")
+        st.write(f"The relationship between :orange[Adjusted Gross Score] and :orange[{scatter_var}] demonstrates a :red[_strong negative correlation_], meaning that as {scatter_var} increases, Adjusted Gross Score will decrease and vice versa.")
     add_border()
 
     # Player-by-player correlations
