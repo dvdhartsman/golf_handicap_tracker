@@ -519,13 +519,19 @@ def find_round(data:pd.DataFrame, name:str, date:pd.Timestamp='2024-07-22'):
     ---------------
     fig:plotly.graph_objects.Figure | barplot for each player from {names} who played a round of golf on {date}
     """
-
+    import streamlit as st
     
     features = ["putts", "3_putts", "fairways_hit", "gir", "penalty/ob", "birdies", "trpl_bogeys_plus", "handicap_diff", "profit/loss"]
     color_list = px.colors.qualitative.Bold
 
     fig = go.Figure()
-    player_data = data_frame = data.loc[(data["date"] == date) & (data["name"] == name)]
+    player_data = data.loc[(data["date"] == date) & (data["name"] == name)]
+
+    player_name = player_data["name"].iloc[0]
+    rd_date = player_data["date"].iloc[0].date()
+    rd_notes = player_data["notes"].iloc[0]
+    
+    st.write(f'Round notes for :orange[{player_name}] on :orange[{rd_date}]: :green["{rd_notes}"]')
     
     if not player_data.empty:
         

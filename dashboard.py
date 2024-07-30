@@ -290,6 +290,5 @@ def dashboard(data):
                      hide_index=True, use_container_width=True)
         add_border()
         for name in query_df["name"].unique():
-            st.write(f'Round notes for :orange[{name}] on :orange[{round_date}]: :green["{query_df["notes"].iloc[0]}"]')
             st.plotly_chart(find_round(query_df, name, pd.to_datetime(round_date, format='YYYY-MM-dd')))
             add_border()
