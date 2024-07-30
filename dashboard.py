@@ -112,19 +112,16 @@ def dashboard(data):
         
 
 
-    
-    
-    # st.markdown("---")
-
     # PROFIT AND LOSS
     add_border()
-    st.subheader(":blue[The only reason we play, Profit and Loss:]")
+    devil_emoji = "\U0001F608"
+    st.subheader(":blue[Overall Profit/Loss:]")
     st.plotly_chart(total_profit(data, color_map=color_map))
 
     add_border()
     
     # Aggregation of stats by different categories
-    st.subheader(":blue[Aggregate statistics by different categories:]")
+    st.subheader(":blue[Aggregate statistics by category:]")
     
     # For labels
     agg_dict = {
@@ -139,8 +136,8 @@ def dashboard(data):
     
     # Selection options
     agg_feat = st.selectbox("Choose a metric to aggregate:", num_features, index=8)
-    agg_cat = st.selectbox("Choose a metric to aggregate:", cat_features)
-    agg_func = st.selectbox("Profit and Loss by Match Format: How would you like to Aggregate?", [*agg_dict_rev.keys()])
+    agg_cat = st.selectbox("Choose a category to group by:", cat_features)
+    agg_func = st.selectbox("What measure would you like to use?", [*agg_dict_rev.keys()])
     
     # Plot 
     st.plotly_chart(agg_features_by_cat(data=data, category=reverse_labels[agg_cat], 
@@ -178,7 +175,7 @@ def dashboard(data):
     # Mean, median, stddev aggregate stats for different metrics
     st.subheader(":blue[Average, median, and standard deviation aggregate statistics:]")
     st.write("Use the dropdown menu to select a metric")
-    agg_var = st.selectbox("Aggregate Metric:", num_features, index=0)
+    agg_var = st.selectbox("Aggregated Metric:", num_features, index=0)
     st.plotly_chart(mean_med_stats(data, reverse_labels[agg_var]))
     add_border()
 
@@ -224,7 +221,7 @@ def dashboard(data):
 
     # Scatter plots of adj_gross_score vs other numeric variables with size option
     add_border()
-    st.subheader(":blue[Adjusted Gross Score vs Contributing Statistics:]")
+    st.subheader(":blue[Adjusted Gross Score vs Selected Metrics:]")
     st.write("Use the first dropdown menu to select a metric for the X-Axis and the second dropdown to optionally add a 'size' metric")
     
     scatter_var = st.selectbox("X-Variable:", [key for key in reverse_labels.keys() if key not in \
@@ -280,7 +277,7 @@ def dashboard(data):
 
     min_search_date = data['date'].min().date()
     max_search_date = data['date'].max().date()
-    st.write("Use the first dropdown menu to select a date to search, then select an individual player for a graph of their data")
+    st.write("Use the first dropdown menu to select a date to search, then select an individual player for a graph of their data from that date")
     round_date = st.date_input("Choose a Date to Search:", min_value=min_search_date, max_value=max_search_date, value=None)
     
     query_df = data.loc[data["date"] == pd.to_datetime(round_date)]

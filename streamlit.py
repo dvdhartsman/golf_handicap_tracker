@@ -18,10 +18,36 @@ def main():
     st.set_page_config(page_title="Golf Group Handicap Tracker",
                    page_icon=':golf:',
                       layout="wide")
+
+
+    # Define a function to add a subheader with reduced space
+    def custom_subheader(text:str, color:str, size:str="4px"):
+        st.markdown(f"<h3 style='margin-bottom: 0px; color: {color}; font-size:{size};'>{text}</h3>", unsafe_allow_html=True)
+
     
-    # Page Title Text, Subtitle
+    # Variables for f-strings
+    linkedin_url = "https://www.linkedin.com/in/david-hartsman-data/"
+    github_url = "https://github.com/dvdhartsman"
+    medium_url = "https://medium.com/@dvdhartsman"
+    
+    linkedin_markdown = f'[LinkedIn]({linkedin_url})'
+    github_markdown = f'[GitHub]({github_url})'
+    medium_markdown = f'[Blog]({medium_url})'
+    
+    # Page Title Text, Subtitle, Bio info
     st.title(':orange[Golf Group Handicap Tracker]')
-    st.subheader(":silver[_Statistics to Inform and Expedite Match Negotiations_]")
+    
+    custom_subheader("<i>Using Data to Facilitate Equitable Match Lines</i>", "#ff6961", "27.5px")
+
+    
+    bio1 = st.columns(2)
+    with bio1[0]:
+        custom_subheader('<i>By: David Hartsman</i>', "silver", "18.5px")
+        st.write(f"{linkedin_markdown} | {github_markdown} | {medium_markdown}")
+        # st.write(f"{linkedin_markdown}")
+        # st.write(f"{github_markdown}")
+        # st.write(f"{medium_markdown}")
+
     add_border()
 
     # Display the body paragraphs from background.py
@@ -142,24 +168,6 @@ def main():
         st.subheader(":blue[Handicaps are still pending until a sufficient number of rounds have been played...]")
         dashboard(df)
 
-    
-    
-    # ------------------------------------- Sidebar - Bio info -------------------------------------------------
-    st.sidebar.title('About Me:')
-    
-    # Variables for f-strings
-    linkedin_url = "https://www.linkedin.com/in/david-hartsman-data/"
-    github_url = "https://github.com/dvdhartsman"
-    medium_url = "https://medium.com/@dvdhartsman"
-    
-    linkedin_markdown = f'[LinkedIn]({linkedin_url})'
-    github_markdown = f'[GitHub]({github_url})'
-    medium_markdown = f'[Blog]({medium_url})'
-    
-    # Text display
-    st.sidebar.subheader('David Hartsman')
-    st.sidebar.markdown(f"{linkedin_markdown} | {github_markdown} | {medium_markdown}", unsafe_allow_html=True)
-    st.sidebar.write('dvdhartsman@gmail.com')
     
 
 
