@@ -336,7 +336,7 @@ def pie_chart(data:pd.DataFrame, column:str, player:str=None):
         player_data = data.loc[data["name"] == player]
 
     if player_data[column].dtype not in ["float", "int"]:
-        fig = px.pie(data_frame=data, names=column, hole=.5, 
+        fig = px.pie(data_frame=player_data, names=column, hole=.5, 
                  title=f"{player}'s Proportion of {label_dict[column]}", 
                  labels={column:label_dict[column]})
         fig.update_layout(legend={"title":player if player else label_dict[column]})
