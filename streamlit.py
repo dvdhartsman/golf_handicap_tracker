@@ -37,7 +37,7 @@ def main():
     # Page Title Text, Subtitle, Bio info
     st.title(':orange[Golf Group Handicap Tracker]')
     
-    custom_subheader("<i>Using Data to Facilitate Equitable Match Lines</i>", "#ff6961", "27.5px")
+    custom_subheader("<i>Using Data to Determine Fair Handicaps for Golf Matches</i>", "#ff6961", "27.5px")
 
     
     bio1 = st.columns(2)
