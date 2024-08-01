@@ -35,9 +35,9 @@ def main():
     medium_markdown = f'[Blog]({medium_url})'
     
     # Page Title Text, Subtitle, Bio info
-    st.title(':orange[Golf Group Handicap Tracker]')
+    st.title(':orange[Golf Performance Tracker]')
     
-    custom_subheader("<i>Using Data to Determine Fair Handicaps for Golf Matches</i>", "#ff6961", "27.5px")
+    custom_subheader("<i>Determining Fair Handicaps for Friendly Competition</i>", "#ff6961", "27.5px")
 
     
     bio1 = st.columns(2)
