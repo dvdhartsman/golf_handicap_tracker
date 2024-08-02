@@ -489,9 +489,9 @@ def scatter(data:pd.DataFrame, column:str, color_map:dict={"Dave":'#636EFA', "Pe
     """
 
     if size:
-        title = f"Adj Score vs {label_dict[column]} with {label_dict[size]} as Size<br><sup>X-Jittered for Visibility</sup>"
+        title = f"Adj Score vs {label_dict[column]} with {label_dict[size]} as Size<br><sup>X-Jittered for Visibility (Integer values will appear slightly offset)</sup>"
     else:
-        title = f"Adj Score vs {label_dict[column]}<br><sup>X-Jittered for Visibility</sup>"
+        title = f"Adj Score vs {label_dict[column]}<br><sup>X-Jittered for Visibility (Integer values will appear slightly offset)</sup>"
 
     data["jittered_col"] = data[column] + np.random.uniform(-jitter_strength, jitter_strength, size=len(data))
     

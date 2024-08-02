@@ -167,7 +167,7 @@ def dashboard(data):
     # Rolling averages to evaluate smoothed trends
     st.subheader(":blue[Rolling average statistics:]")
     st.write("Use the dropdown menu to select a metric and the slider to select the size of your window")
-    roll_var = st.selectbox("Rolling Average Metric:", num_features, index=0)
+    roll_var = st.selectbox("Rolling Average Metric:", num_features, index=7)
     window = st.slider("Number of Rounds to Include in the Rolling Window:", min_value=5, max_value = 30) 
     st.plotly_chart(rolling_avg(data, reverse_labels[roll_var], window, color_map=color_map))
     add_border()
@@ -175,14 +175,14 @@ def dashboard(data):
     # Mean, median, stddev aggregate stats for different metrics
     st.subheader(":blue[Average, median, and standard deviation aggregate statistics:]")
     st.write("Use the dropdown menu to select a metric")
-    agg_var = st.selectbox("Aggregated Metric:", num_features, index=0)
+    agg_var = st.selectbox("Aggregated Metric:", num_features, index=7)
     st.plotly_chart(mean_med_stats(data, reverse_labels[agg_var]))
     add_border()
 
     # Distribution plots for various metrics
     st.subheader(":blue[Distributions: Comparing distributions of different statistics across players:]")
     st.write("Use the dropdown menu to select a metric")
-    hist_var = st.selectbox("Distribution Metric:", num_features, index=0)
+    hist_var = st.selectbox("Distribution Metric:", num_features, index=7)
     st.plotly_chart(histplot(data, reverse_labels[hist_var], color_map=color_map))
     add_border()
 
@@ -262,6 +262,7 @@ def dashboard(data):
         st.write(f"The relationship between :orange[Adjusted Gross Score] and :orange[{scatter_var}] demonstrates a :red[_strong negative correlation_], meaning that as {scatter_var} increases, Adjusted Gross Score will decrease and vice versa.")
 
     # Player-by-player correlations
+    st.write("The correlation for all of the data may hide player-specific correlations. Isolate players using the legend icons above and consider the player-specific correlations below.")
     st.write(":blue[Player-by-Player Correlation Breakdown for Comparison:]")
 
     st.dataframe(data.groupby("name")[["adj_gross_score", reverse_labels[scatter_var]]].corr().reset_index()\
