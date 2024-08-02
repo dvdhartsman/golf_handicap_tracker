@@ -234,15 +234,14 @@ def dashboard(data):
     
     
     st.plotly_chart(scatter(data=data, column=reverse_labels[scatter_var], size=reverse_labels[size_var] if size_var else None, color_map=color_map))
-    add_border()
-
+    
 
     # Correlation analysis of the above scatterplot
     st.subheader(":blue[Feature Correlation:]")
     
     corr = data[["adj_gross_score", reverse_labels[scatter_var]]].corr().iloc[0,1]
     
-    st.write(f'Overall Pearson Correlation for :orange[_Adjusted Gross Score_] and :orange[_{scatter_var}_]: :green[**{corr:.3f}**]')
+    st.write(f'Across all players and data, the Pearson Correlation for :orange[_Adjusted Gross Score_] and :orange[_{scatter_var}_] is: :green[**{corr:.3f}**]')
 
     # Boilerplate analysis options
     if abs(corr) <.3:
@@ -261,10 +260,9 @@ def dashboard(data):
         st.write(f"The relationship between :orange[Adjusted Gross Score] and :orange[{scatter_var}] demonstrates a :blue[_moderate negative correlation_], meaning that as {scatter_var} increases, Adjusted Gross Score will decrease and vice versa.")
     elif corr < -.7:
         st.write(f"The relationship between :orange[Adjusted Gross Score] and :orange[{scatter_var}] demonstrates a :red[_strong negative correlation_], meaning that as {scatter_var} increases, Adjusted Gross Score will decrease and vice versa.")
-    add_border()
 
     # Player-by-player correlations
-    st.write("Player by Player Correlation Breakdown for Comparison:")
+    st.write(":blue[Player-by-Player Correlation Breakdown for Comparison:]")
 
     st.dataframe(data.groupby("name")[["adj_gross_score", reverse_labels[scatter_var]]].corr().reset_index()\
             .rename(columns={reverse_labels[scatter_var]:"Correlation", "name":"Player Name"})\
@@ -278,17 +276,22 @@ def dashboard(data):
     min_search_date = data['date'].min().date()
     max_search_date = data['date'].max().date()
     st.write("Use the first dropdown menu to select a date to search, then select an individual player for a graph of their data from that date")
-    round_date = st.date_input("Choose a Date to Search:", min_value=min_search_date, max_value=max_search_date, value=None)
     
-    query_df = data.loc[data["date"] == pd.to_datetime(round_date)]
-    if query_df.empty:
-        st.subheader(":red[No records found for this date]")
+    # round_date = st.date_input("Choose a Date to Search:", min_value=min_search_date, max_value=max_search_date, value=None)
+    round_date = st.selectbox("Choose a Date:", [None] + [i.strftime("%b-%d-%Y") for i in data["date"].unique()], index=0)
     
-    if not query_df.empty:         #### Edit Later #### 
+    if not round_date:
+        st.subheader(":orange[Choose a date to see statistics and notes from the round:]")
+
+    elif round_date:
+        selected_date = pd.to_datetime(round_date, format="%b-%d-%Y")
+        
+        query_df = data.loc[data["date"] == selected_date]
+        
         st.dataframe(query_df.drop(columns=["jittered_col", "notes", "handicap"]).rename(columns=label_dict)\
                      .rename(columns={"name":"Player", "date":"Date", "course_rating":"Course Rating", "slope_rating":"Slope Rating"}),\
                      hide_index=True, use_container_width=True)
         add_border()
         for name in query_df["name"].unique():
-            st.plotly_chart(find_round(query_df, name, pd.to_datetime(round_date, format='YYYY-MM-dd')))
+            st.plotly_chart(find_round(query_df, name, selected_date))
             add_border()
