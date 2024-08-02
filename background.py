@@ -61,7 +61,7 @@ $$
 $$
 """)
 
-    st.markdown("""As you can see, the process of obtaining a handicap is not simple. I think the process's relative complexity is emblematic of how golf can turn off many casual players. I dislike it immensely even though I enjoy the game as a whole.""")
+    st.markdown("""As you can see, the process of obtaining a handicap is not simple. I think the process's relative complexity is emblematic of how golf can create barriers to entry for many casual players, either through cost, pretentiousness, or the opacity of the handicapping process. I dislike it immensely even though I enjoy the game as a whole.""")
     st.markdown("""I hope that this information has helped you to understand the process of getting a personal handicap index. Please feel free to investigate the synthetic data and visualizations I have loaded to see how our incoming data will be stored and analyzed. My friends and my golf data will be trickling in slowly as well, so stay tuned to the "Real Data" tab to either laugh at me or be impressed!""")
 
     # Final Partition
