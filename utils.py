@@ -578,8 +578,11 @@ def total_profit(data:pd.DataFrame, color_map:dict={"Dave":'#636EFA', "Pete":'#E
     """
     
     fig = px.bar(data_frame = data.groupby("name")["profit/loss"].sum().reset_index(), x="name", y="profit/loss", color="name", 
-                 color_discrete_map=color_map, title = "Total Profit/Loss for Each Player", hover_name="name", 
+                 color_discrete_map=color_map, title = "Total Profit/Loss (Betting Units) for Each Player", 
                  labels={"profit/loss":"Profit/Loss", "name":"Player Name"}, hover_data={"name":False})
+
+    # Update hover template to include "Units"
+    fig.update_traces(hovertemplate='<b>%{x}</b><br><br>Profit/Loss: %{y:.2f} Units<extra></extra>')
 
     return fig
 
