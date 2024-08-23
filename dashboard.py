@@ -115,7 +115,7 @@ def dashboard(data):
     # PROFIT AND LOSS
     add_border()
     devil_emoji = "\U0001F608"
-    st.subheader(":blue[Overall Profit/Loss:]")
+    st.subheader(":blue[Overall Profit/Loss in Betting Units:]")
     st.plotly_chart(total_profit(data, color_map=color_map))
 
     add_border()
